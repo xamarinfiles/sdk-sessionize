@@ -21,7 +21,10 @@ namespace SessionizeApi.Logger
 
             try
             {
-                LoggingService?.WriteHeader("All Data");
+                var header = string.IsNullOrEmpty(@event.DebuggerDisplay)
+                    ? "All Data"
+                    : @event.DebuggerDisplay;
+                LoggingService?.WriteHeader(header);
                 PrintSpeakers(@event.Speakers);
                 PrintSessions(@event.Sessions);
                 PrintQuestions(@event.Questions);
