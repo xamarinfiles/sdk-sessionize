@@ -1,7 +1,7 @@
-﻿using System;
-using FancyLogger;
+﻿using FancyLogger;
 using SessionizeApi.Loader;
 using SessionizeApi.Logger;
+using System;
 
 namespace SessionizeApi.Models.Console
 {
@@ -9,7 +9,7 @@ namespace SessionizeApi.Models.Console
     {
         #region Sample Files
 
-        private static readonly string AllDataJsonFile = "OrlandoCodeCamp\\2020-All.json";
+        private static readonly string AllDataJsonFile = "Events\\OrlandoCodeCamp\\2020-All.json";
 
         //private static readonly string AllDataJsonFile = "All.json";
 
