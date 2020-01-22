@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29503.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Models", "Models", "{56AEC191-A3A6-480D-A04B-7DDA1DC52C91}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{C77B69B1-75FD-4B00-89FE-3CC426261520}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{88FB9C39-156F-40D0-8809-5663CDE3E52D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SessionizeApi.Models", "Models\SessionizeApi.Models\SessionizeApi.Models.csproj", "{91456CE0-737C-4ECB-8A6F-033537C3077D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SessionizeApi.Models.Console", "Models\SessionizeApi.Models.Console\SessionizeApi.Models.Console.csproj", "{CA9EF72E-7C89-483A-8BEF-48638DA02B1A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Azure", "Azure", "{1F1FE512-FDC5-4D4B-8F42-B155925D32A6}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SessionizeApi.Logger", "Shared\SessionizeApi.Logger\SessionizeApi.Logger.shproj", "{71F9A0DB-1155-41A2-8CDE-0095179E386C}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SessionizeApi.Samples", "Shared\SessionizeApi.Samples\SessionizeApi.Samples.shproj", "{A7CB9C0A-6552-43C0-BBC2-0C831B449A9D}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SessionizeApi.Loader", "Shared\SessionizeApi.Loader\SessionizeApi.Loader.shproj", "{630324D6-9EC2-44A5-984A-CAD73CC53BA5}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Shared\SessionizeApi.Loader\SessionizeApi.Loader.projitems*{630324d6-9ec2-44a5-984a-cad73cc53ba5}*SharedItemsImports = 13
+		Shared\SessionizeApi.Logger\SessionizeApi.Logger.projitems*{71f9a0db-1155-41a2-8cde-0095179e386c}*SharedItemsImports = 13
+		Shared\SessionizeApi.Samples\SessionizeApi.Samples.projitems*{a7cb9c0a-6552-43c0-bbc2-0c831b449a9d}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{91456CE0-737C-4ECB-8A6F-033537C3077D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91456CE0-737C-4ECB-8A6F-033537C3077D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91456CE0-737C-4ECB-8A6F-033537C3077D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91456CE0-737C-4ECB-8A6F-033537C3077D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA9EF72E-7C89-483A-8BEF-48638DA02B1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA9EF72E-7C89-483A-8BEF-48638DA02B1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA9EF72E-7C89-483A-8BEF-48638DA02B1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA9EF72E-7C89-483A-8BEF-48638DA02B1A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{91456CE0-737C-4ECB-8A6F-033537C3077D} = {56AEC191-A3A6-480D-A04B-7DDA1DC52C91}
+		{CA9EF72E-7C89-483A-8BEF-48638DA02B1A} = {56AEC191-A3A6-480D-A04B-7DDA1DC52C91}
+		{71F9A0DB-1155-41A2-8CDE-0095179E386C} = {88FB9C39-156F-40D0-8809-5663CDE3E52D}
+		{A7CB9C0A-6552-43C0-BBC2-0C831B449A9D} = {88FB9C39-156F-40D0-8809-5663CDE3E52D}
+		{630324D6-9EC2-44A5-984A-CAD73CC53BA5} = {88FB9C39-156F-40D0-8809-5663CDE3E52D}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {748E59E2-DFB0-4B4E-9F63-7702D4AB2B87}
+	EndGlobalSection
+EndGlobal

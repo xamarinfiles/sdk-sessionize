@@ -1,0 +1,577 @@
+{
+  "sessions": [
+    {
+      "id": "14022",
+      "title": "Aiden's Session",
+      "description": "Usually, you would find a session description here. But, this is not a real session submission, so description is missing. Ha!",
+      "startsAt": "2017-05-27T09:00:00Z",
+      "endsAt": "2017-05-27T10:00:00Z",
+      "isServiceSession": false,
+      "isPlenumSession": true,
+      "speakers": [
+        "00000000-0000-0000-0000-000000000004"
+      ],
+      "categoryItems": [
+        4373,
+        10663,
+        10666,
+        10672
+      ],
+      "questionAnswers": [
+        {
+          "questionId": 148,
+          "answerValue": "67"
+        }
+      ],
+      "roomId": 215
+    },
+    {
+      "id": "14019",
+      "title": "Jackson's Session",
+      "description": "Usually, you would find a session description here. But, this is not a real session submission, so description is missing. Ha!",
+      "startsAt": "2017-05-27T10:15:00Z",
+      "endsAt": "2017-05-27T11:15:00Z",
+      "isServiceSession": false,
+      "isPlenumSession": false,
+      "speakers": [
+        "00000000-0000-0000-0000-000000000001"
+      ],
+      "categoryItems": [
+        4372,
+        4375,
+        10667,
+        10669
+      ],
+      "questionAnswers": [
+        {
+          "questionId": 148,
+          "answerValue": "34"
+        }
+      ],
+      "roomId": 216
+    },
+    {
+      "id": "14020",
+      "title": "Emma's Session",
+      "description": "Usually, you would find a session description here. But, this is not a real session submission, so description is missing. Ha!",
+      "startsAt": "2017-05-27T10:15:00Z",
+      "endsAt": "2017-05-27T11:15:00Z",
+      "isServiceSession": false,
+      "isPlenumSession": false,
+      "speakers": [
+        "00000000-0000-0000-0000-000000000002"
+      ],
+      "categoryItems": [
+        4373,
+        10664,
+        10668,
+        17076
+      ],
+      "questionAnswers": [
+        {
+          "questionId": 148,
+          "answerValue": "45"
+        }
+      ],
+      "roomId": 215
+    },
+    {
+      "id": "14023",
+      "title": "Lucas's Session",
+      "description": "Usually, you would find a session description here. But, this is not a real session submission, so description is missing. Ha!",
+      "startsAt": "2017-05-27T11:30:00Z",
+      "endsAt": "2017-05-27T12:30:00Z",
+      "isServiceSession": false,
+      "isPlenumSession": false,
+      "speakers": [
+        "00000000-0000-0000-0000-000000000005"
+      ],
+      "categoryItems": [
+        4373,
+        10663,
+        10667,
+        10675
+      ],
+      "questionAnswers": [],
+      "roomId": 216
+    },
+    {
+      "id": "14026",
+      "title": "Ava's Session",
+      "description": "Usually, you would find a session description here. But, this is not a real session submission, so description is missing. Ha!",
+      "startsAt": "2017-05-27T11:30:00Z",
+      "endsAt": "2017-05-27T12:30:00Z",
+      "isServiceSession": false,
+      "isPlenumSession": false,
+      "speakers": [
+        "00000000-0000-0000-0000-000000000008"
+      ],
+      "categoryItems": [
+        4374,
+        4375,
+        10667,
+        10672
+      ],
+      "questionAnswers": [],
+      "roomId": 215
+    },
+    {
+      "id": "f91513e5-6e73-4910-9ee5-070a6ab04035",
+      "title": "Lunch",
+      "description": "Fooooood!",
+      "startsAt": "2017-05-27T12:30:00Z",
+      "endsAt": "2017-05-27T13:30:00Z",
+      "isServiceSession": true,
+      "isPlenumSession": true,
+      "speakers": [],
+      "categoryItems": [],
+      "questionAnswers": [],
+      "roomId": 217
+    },
+    {
+      "id": "14025",
+      "title": "Noah's Session",
+      "description": "Usually, you would find a session description here. But, this is not a real session submission, so description is missing. Ha!",
+      "startsAt": "2017-05-28T09:00:00Z",
+      "endsAt": "2017-05-28T11:15:00Z",
+      "isServiceSession": false,
+      "isPlenumSession": false,
+      "speakers": [
+        "00000000-0000-0000-0000-000000000007"
+      ],
+      "categoryItems": [
+        4374,
+        4375,
+        10668,
+        10671
+      ],
+      "questionAnswers": [],
+      "roomId": 216
+    },
+    {
+      "id": "14027",
+      "title": "Mia's Session",
+      "description": "Usually, you would find a session description here. But, this is not a real session submission, so description is missing. Ha!",
+      "startsAt": "2017-05-28T09:00:00Z",
+      "endsAt": "2017-05-28T10:00:00Z",
+      "isServiceSession": false,
+      "isPlenumSession": false,
+      "speakers": [
+        "00000000-0000-0000-0000-000000000009"
+      ],
+      "categoryItems": [
+        4372,
+        10663,
+        10666,
+        10670
+      ],
+      "questionAnswers": [],
+      "roomId": 215
+    },
+    {
+      "id": "14024",
+      "title": "Liam's Session",
+      "description": "Usually, you would find a session description here. But, this is not a real session submission, so description is missing. Ha!",
+      "startsAt": "2017-05-28T10:15:00Z",
+      "endsAt": "2017-05-28T11:15:00Z",
+      "isServiceSession": false,
+      "isPlenumSession": false,
+      "speakers": [
+        "00000000-0000-0000-0000-000000000006"
+      ],
+      "categoryItems": [
+        4374,
+        10663,
+        10665,
+        10672
+      ],
+      "questionAnswers": [],
+      "roomId": 215
+    },
+    {
+      "id": "14018",
+      "title": "Sophia's Session",
+      "description": "Usually, you would find a session description here. But, this is not a real session submission, so description is missing. Ha!",
+      "startsAt": "2017-05-28T11:30:00Z",
+      "endsAt": "2017-05-28T12:30:00Z",
+      "isServiceSession": false,
+      "isPlenumSession": false,
+      "speakers": [
+        "00000000-0000-0000-0000-000000000000"
+      ],
+      "categoryItems": [
+        4373,
+        10663,
+        10665,
+        10676
+      ],
+      "questionAnswers": [
+        {
+          "questionId": 148,
+          "answerValue": "23"
+        }
+      ],
+      "roomId": 215
+    },
+    {
+      "id": "14021",
+      "title": "Olivia's Session",
+      "description": "Usually, you would find a session description here. But, this is not a real session submission, so description is missing. Ha!",
+      "startsAt": "2017-05-28T11:30:00Z",
+      "endsAt": "2017-05-28T12:30:00Z",
+      "isServiceSession": false,
+      "isPlenumSession": false,
+      "speakers": [
+        "00000000-0000-0000-0000-000000000003"
+      ],
+      "categoryItems": [
+        4373,
+        10663,
+        10665,
+        10669
+      ],
+      "questionAnswers": [
+        {
+          "questionId": 148,
+          "answerValue": "56"
+        }
+      ],
+      "roomId": 216
+    }
+  ],
+  "speakers": [
+    {
+      "id": "00000000-0000-0000-0000-000000000004",
+      "firstName": "Aiden",
+      "lastName": "Test",
+      "bio": "Pop culture fanatic. Friend of animals everywhere. Student. Thinker. Bacon practitioner.",
+      "tagLine": "Professional public speaker",
+      "profilePicture": "https://sessionize.com/image?f=e82a4a80c16abc546f05e05a8ef591ef,400,400,True,False,test4.jpg",
+      "isTopSpeaker": true,
+      "links": [
+        {
+          "title": "Twitter",
+          "url": "https://twitter.com/sessionizecom",
+          "linkType": "Twitter"
+        },
+        {
+          "title": "LinkedIn",
+          "url": "http://linkedin.com/in/domagojpa",
+          "linkType": "LinkedIn"
+        }
+      ],
+      "sessions": [
+        14022
+      ],
+      "fullName": "Aiden Test",
+      "categoryItems": [],
+      "questionAnswers": []
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000008",
+      "firstName": "Ava",
+      "lastName": "Test",
+      "bio": "Student. Wannabe creator. Incurable music advocate.",
+      "tagLine": "PR specialist",
+      "profilePicture": "https://sessionize.com/image?f=4e1b91f4d9523cabcbce0759bb16d61a,400,400,True,False,test8.jpg",
+      "isTopSpeaker": false,
+      "links": [],
+      "sessions": [
+        14026
+      ],
+      "fullName": "Ava Test",
+      "categoryItems": [],
+      "questionAnswers": []
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000002",
+      "firstName": "Emma",
+      "lastName": "Test",
+      "bio": "General student. Avid coffee specialist. Web aficionado. Food geek. Bacon expert. Alcohol junkie.",
+      "tagLine": "Miss Venezuela",
+      "profilePicture": "https://sessionize.com/image?f=33cce42e13b2f74e43ce24812cd6b863,400,400,True,False,test2.jpg",
+      "isTopSpeaker": true,
+      "links": [],
+      "sessions": [
+        14020
+      ],
+      "fullName": "Emma Test",
+      "categoryItems": [],
+      "questionAnswers": []
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000001",
+      "firstName": "Jackson",
+      "lastName": "Test",
+      "bio": "Thinker. Food trailblazer. Organizer. Student. Pop culture fanatic. Writer. Passionate twitter lover. Music advocate.",
+      "tagLine": "Tech guy",
+      "profilePicture": "https://sessionize.com/image?f=c60d0ef66e02ee405bbe89ef29b7f626,400,400,True,False,test1.jpg",
+      "isTopSpeaker": true,
+      "links": [
+        {
+          "title": "Twitter",
+          "url": "https://twitter.com/sessionizecom",
+          "linkType": "Twitter"
+        }
+      ],
+      "sessions": [
+        14019
+      ],
+      "fullName": "Jackson Test",
+      "categoryItems": [],
+      "questionAnswers": []
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000006",
+      "firstName": "Liam",
+      "lastName": "Test",
+      "bio": "Total web enthusiast. Unable to type with boxing gloves on. Future teen idol. Avid internet trailblazer. Amateur bacon buff.",
+      "tagLine": "Tester @ Sessionize",
+      "profilePicture": "https://sessionize.com/image?f=e937838c895a3e172c20895fd27fc380,400,400,True,False,test6.jpg",
+      "isTopSpeaker": false,
+      "links": [],
+      "sessions": [
+        14024
+      ],
+      "fullName": "Liam Test",
+      "categoryItems": [],
+      "questionAnswers": []
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000005",
+      "firstName": "Lucas",
+      "lastName": "Test",
+      "bio": "Music evangelist. Coffee junkie. Twitter trailblazer. Total food nerd. Student. General creator. Falls down a lot.",
+      "tagLine": "V.I.P.",
+      "profilePicture": "https://sessionize.com/image?f=173facb7f63103ba9c7ef559ffeba08e,400,400,True,False,test5.jpg",
+      "isTopSpeaker": false,
+      "links": [],
+      "sessions": [
+        14023
+      ],
+      "fullName": "Lucas Test",
+      "categoryItems": [],
+      "questionAnswers": []
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000009",
+      "firstName": "Mia",
+      "lastName": "Test",
+      "bio": "Explorer. Hardcore troublemaker. Creator. Pop culture nerd. Prone to fits of apathy. Web maven.",
+      "tagLine": "Senior Event Promotor",
+      "profilePicture": "https://sessionize.com/image?f=40b964cfb5f64cd90974c6a7bccfbf01,400,400,True,False,test9.jpg",
+      "isTopSpeaker": false,
+      "links": [],
+      "sessions": [
+        14027
+      ],
+      "fullName": "Mia Test",
+      "categoryItems": [],
+      "questionAnswers": []
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000007",
+      "firstName": "Noah",
+      "lastName": "Test",
+      "bio": "Friend of animals everywhere. Freelance twitter practitioner. Gamer. Subtly charming food geek.",
+      "tagLine": "Everyday normal guy",
+      "profilePicture": "https://sessionize.com/image?f=b6050e1cc99c867263bef6449c28b559,400,400,True,False,test7.jpg",
+      "isTopSpeaker": false,
+      "links": [],
+      "sessions": [
+        14025
+      ],
+      "fullName": "Noah Test",
+      "categoryItems": [],
+      "questionAnswers": []
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000003",
+      "firstName": "Olivia",
+      "lastName": "Test",
+      "bio": "Hipster-friendly alcohol aficionado. Avid twitter lover. Explorer. Hardcore coffee buff.",
+      "tagLine": "ABC, DEF, GHI",
+      "profilePicture": "https://sessionize.com/image?f=fcb3e6a458469cea2c001c3a0bb2d4bc,400,400,True,False,test3.jpg",
+      "isTopSpeaker": true,
+      "links": [],
+      "sessions": [
+        14021
+      ],
+      "fullName": "Olivia Test",
+      "categoryItems": [],
+      "questionAnswers": []
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000000",
+      "firstName": "Sophia",
+      "lastName": "Test",
+      "bio": "Award-winning zombie specialist. Reader. Twitter fan. Total introvert. Internet evangelist. Thinker. Beer junkie. Food advocate.",
+      "tagLine": "CEO / Contoso",
+      "profilePicture": "https://sessionize.com/image?f=ceb219e8ad753d8daae91f41aa533d61,400,400,True,False,test0.jpg",
+      "isTopSpeaker": true,
+      "links": [
+        {
+          "title": "Twitter",
+          "url": "https://twitter.com/sessionizecom",
+          "linkType": "Twitter"
+        }
+      ],
+      "sessions": [
+        14018
+      ],
+      "fullName": "Sophia Test",
+      "categoryItems": [],
+      "questionAnswers": []
+    }
+  ],
+  "questions": [
+    {
+      "id": 148,
+      "question": "Demo",
+      "questionType": "Percentage",
+      "sort": 5
+    }
+  ],
+  "categories": [
+    {
+      "id": 2124,
+      "title": "Session format",
+      "items": [
+        {
+          "id": 4372,
+          "name": "Lightning talk",
+          "sort": 1
+        },
+        {
+          "id": 4373,
+          "name": "Session",
+          "sort": 2
+        },
+        {
+          "id": 4374,
+          "name": "Workshop",
+          "sort": 3
+        }
+      ],
+      "sort": 0
+    },
+    {
+      "id": 2125,
+      "title": "Track",
+      "items": [
+        {
+          "id": 10663,
+          "name": "Technical",
+          "sort": 1
+        },
+        {
+          "id": 10664,
+          "name": "Scientific",
+          "sort": 2
+        },
+        {
+          "id": 4375,
+          "name": "Business",
+          "sort": 3
+        }
+      ],
+      "sort": 1
+    },
+    {
+      "id": 2126,
+      "title": "Level",
+      "items": [
+        {
+          "id": 10665,
+          "name": "Introductory and overview",
+          "sort": 1
+        },
+        {
+          "id": 10666,
+          "name": "Intermediate",
+          "sort": 2
+        },
+        {
+          "id": 10667,
+          "name": "Advanced",
+          "sort": 3
+        },
+        {
+          "id": 10668,
+          "name": "Expert",
+          "sort": 4
+        }
+      ],
+      "sort": 2
+    },
+    {
+      "id": 2127,
+      "title": "Language",
+      "items": [
+        {
+          "id": 10669,
+          "name": "English",
+          "sort": 1
+        },
+        {
+          "id": 10670,
+          "name": "Spanish",
+          "sort": 2
+        },
+        {
+          "id": 10671,
+          "name": "German",
+          "sort": 3
+        },
+        {
+          "id": 10672,
+          "name": "Italian",
+          "sort": 4
+        },
+        {
+          "id": 10673,
+          "name": "French",
+          "sort": 5
+        },
+        {
+          "id": 10674,
+          "name": "Chinese",
+          "sort": 6
+        },
+        {
+          "id": 17076,
+          "name": "Arabic",
+          "sort": 7
+        },
+        {
+          "id": 10675,
+          "name": "Portuguese",
+          "sort": 8
+        },
+        {
+          "id": 10676,
+          "name": "Russian",
+          "sort": 9
+        }
+      ],
+      "sort": 3
+    }
+  ],
+  "rooms": [
+    {
+      "id": 215,
+      "name": "Green Room",
+      "sort": 0
+    },
+    {
+      "id": 216,
+      "name": "Yellow Room",
+      "sort": 1
+    },
+    {
+      "id": 217,
+      "name": "Restaurant",
+      "sort": 2
+    }
+  ]
+}
