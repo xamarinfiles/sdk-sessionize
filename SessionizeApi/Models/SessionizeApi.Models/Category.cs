@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Diagnostics;
+using System.Linq;
 
 namespace SessionizeApi.Models
 {
@@ -25,7 +27,23 @@ namespace SessionizeApi.Models
         public virtual string LogDisplay => DebuggerDisplay;
 
         // TODO Add Items
-        public override string ToString() => LogDisplay;
+        public override string ToString()
+        {
+            try
+            {
+                var str = LogDisplay;
+                str = Items.Aggregate(str,
+                    (current, item) => current + $"\n\t\t\t\t{item.LogDisplay}");
+
+                return str;
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception.Message);
+
+                return $"{Id} - {Sort} - {Title}";
+            }
+        }
 
         #endregion
     }

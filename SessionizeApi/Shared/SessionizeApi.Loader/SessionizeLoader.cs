@@ -71,7 +71,7 @@ namespace SessionizeApi.Loader
             PopulateIndexDictionaries(ref @event);
             PopulateSessionDependencies(ref @event);
             PopulateSpeakerDependencies(ref @event);
-            // TODO NEXT Add Categories
+            PopulateCategoryDependencies(ref @event);
             // TODO Add Questions
         }
 
@@ -80,8 +80,18 @@ namespace SessionizeApi.Loader
         {
             @event.SessionDictionary =
                 @event.Sessions.ToDictionary(s => s.Id);
+
             @event.SpeakerDictionary =
                 @event.Speakers.ToDictionary(s => s.Id);
+
+            @event.CategoryDictionary = new Dictionary<int, Item>();
+            foreach (var (item, itemId) in
+                @event.Categories.SelectMany(
+                    category => category.Items.Select(
+                        item => (item, item.Id))))
+            {
+                @event.CategoryDictionary[itemId] = item;
+            }
         }
 
         [Conditional("DEBUG")]
@@ -106,6 +116,20 @@ namespace SessionizeApi.Loader
             {
                 speaker.Sessions.Add(@event.SessionDictionary[sessionId]);
             }
+        }
+
+        [Conditional("DEBUG")]
+        private static void PopulateCategoryDependencies(ref Event @event)
+        {
+            foreach (var (session, itemId) in
+                @event.Sessions.SelectMany(
+                    session => session.CategoryIds.Select(
+                        itemId => (session, itemId)).OrderBy(itemId => itemId)))
+            {
+                session.CategoryItems.Add(@event.CategoryDictionary[itemId]);
+            }
+
+            // TODO Speaker Categories
         }
 
         #endregion

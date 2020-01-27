@@ -25,6 +25,7 @@ namespace SessionizeApi.Models
 
         [JsonProperty("rooms")]
         public Room[] Rooms { get; set; }
+
         [JsonProperty("sessions")]
         public Session[] Sessions { get; set; }
 
@@ -39,11 +40,11 @@ namespace SessionizeApi.Models
 
         public override string ToString() => LogDisplay;
 
+        public IDictionary<int, Item> CategoryDictionary { get; set; }
+
         public IDictionary<int, Session> SessionDictionary { get; set; }
 
         public IDictionary<Guid, Speaker> SpeakerDictionary { get; set; }
-
-        // TODO Category dictionary
 
         #endregion
     }

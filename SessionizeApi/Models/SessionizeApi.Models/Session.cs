@@ -34,7 +34,7 @@ namespace SessionizeApi.Models
         public Guid[] SpeakerIds { get; set; }
 
         [JsonProperty("categoryItems")]
-        public int[] CategoryItems { get; set; }
+        public int[] CategoryIds { get; set; }
 
         [JsonProperty("questionAnswers")]
         public QuestionAnswer[] QuestionAnswers { get; set; }
@@ -50,7 +50,7 @@ namespace SessionizeApi.Models
 
         public IList<Speaker> Speakers { get; set; } = new List<Speaker>();
 
-        // TODO NEXT Categories
+        public IList<Item> CategoryItems {get; set;} = new List<Item>();
 
         // TODO QuestionAnswers
 
@@ -58,11 +58,12 @@ namespace SessionizeApi.Models
         {
             try
             {
-                // TODO NEXT Add Categories
-                // TODO Add Questions/QuestionsAnswers and Rooms
-                var str = Speakers.Aggregate(LogDisplay,
-                    (current, speaker) =>
-                        current + $"\n\t\t\t\t{speaker.LogDisplay}");
+                // TODO Add Questions/QuestionsAnswers and Room
+                var str = LogDisplay;
+                str = Speakers.Aggregate(str,
+                    (current, speaker) => current + $"\n\t\t\t\t{speaker.LogDisplay}");
+                str = CategoryItems.Aggregate(str,
+                    (current, item) => current + $"\n\t\t\t\t{item.LogDisplay}");
 
                 return str;
             }
