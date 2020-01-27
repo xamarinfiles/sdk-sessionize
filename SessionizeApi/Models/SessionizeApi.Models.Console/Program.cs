@@ -1,28 +1,14 @@
-﻿using FancyLogger;
+using FancyLogger;
 using SessionizeApi.Loader;
 using SessionizeApi.Logger;
+using SessionizeApi.Samples;
 using System;
+using System.Diagnostics;
 
 namespace SessionizeApi.Models.Console
 {
     internal static class Program
     {
-        #region Sample Files
-
-        private static readonly string AllDataJsonFile = "Events\\OrlandoCodeCamp\\2020-All.json";
-
-        //private static readonly string AllDataJsonFile = "All.json";
-
-        //private static readonly string GridSmartJsonFile = "GridSmart.json";
-
-        //private static readonly string SessionsJsonFile = "Sessions.json";
-
-        //private static readonly string SpeakersJsonFile = "Speakers.json";
-
-        //private static readonly string SpeakerWallJsonFile = "SpeakerWall.json";
-
-        #endregion
-
         #region Services
 
         private static FancyLoggerService LoggingService { get; set; }
@@ -40,7 +26,7 @@ namespace SessionizeApi.Models.Console
                 SessionizeLoader.LoggingService = LoggingService;
                 SessionizeLogger.LoggingService = LoggingService;
 
-                TestEvent(AllDataJsonFile);
+                ImportAndPrintEvent(Filenames.OrlandoCodeCamp2020AllData);
             }
             catch (Exception exception)
             {
@@ -50,9 +36,10 @@ namespace SessionizeApi.Models.Console
 
         #endregion
 
-        #region All Data
+        #region Debugging / Discovery / Verification
 
-        private static void TestEvent(string eventJsonFileName)
+        [Conditional("DEBUG")]
+        private static void ImportAndPrintEvent(string eventJsonFileName)
         {
             try
             {
