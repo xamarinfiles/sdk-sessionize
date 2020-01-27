@@ -1,20 +1,29 @@
 ﻿using FancyLogger;
 using SessionizeApi.Models;
 using System;
+using System.Diagnostics;
 
 namespace SessionizeApi.Logger
 {
-    internal static class SessionizeLogger
+    internal class SessionizeLogger
     {
         #region Services
 
-        public static FancyLoggerService LoggingService { get; set; }
+        private FancyLoggerService LoggingService { get; set; }
 
         #endregion
 
-        #region All Data
+        #region Constructor
 
-        internal static void PrintEvent(Event @event)
+        // TODO Fix CodeRush formatting
+        internal SessionizeLogger(FancyLoggerService loggingService) => LoggingService = loggingService;
+
+        #endregion
+
+        #region Debugging / Discovery / Verification
+
+        [Conditional("DEBUG")]
+        internal void PrintEvent(Event @event)
         {
             if (@event == null)
                 return;
@@ -24,7 +33,7 @@ namespace SessionizeApi.Logger
                 var header = string.IsNullOrEmpty(@event.DebuggerDisplay)
                     ? "All Data"
                     : @event.DebuggerDisplay;
-                LoggingService?.WriteHeader(header);
+                LoggingService.WriteHeader(header);
                 PrintSpeakers(@event.Speakers);
                 PrintSessions(@event.Sessions);
                 PrintQuestions(@event.Questions);
@@ -33,7 +42,7 @@ namespace SessionizeApi.Logger
             }
             catch (Exception exception)
             {
-                LoggingService?.WriteException(exception);
+                LoggingService.WriteException(exception);
             }
         }
 
@@ -41,19 +50,20 @@ namespace SessionizeApi.Logger
 
         #region Categories
 
-        private static void PrintCategories(Category[] categories)
+        [Conditional("DEBUG")]
+        private void PrintCategories(Category[] categories)
         {
             if (!(categories?.Length > 1))
                 return;
 
             try
             {
-                LoggingService?.WriteSubheader("Categories");
-                LoggingService?.WriteList(categories);
+                LoggingService.WriteSubheader("Categories");
+                LoggingService.WriteList(categories);
             }
             catch (Exception exception)
             {
-                LoggingService?.WriteException(exception);
+                LoggingService.WriteException(exception);
             }
         }
 
@@ -61,19 +71,20 @@ namespace SessionizeApi.Logger
 
         #region Questions
 
-        private static void PrintQuestions(Question[] questions)
+        [Conditional("DEBUG")]
+        private void PrintQuestions(Question[] questions)
         {
             if (!(questions?.Length > 1))
                 return;
 
             try
             {
-                LoggingService?.WriteSubheader("Questions");
-                LoggingService?.WriteList(questions);
+                LoggingService.WriteSubheader("Questions");
+                LoggingService.WriteList(questions);
             }
             catch (Exception exception)
             {
-                LoggingService?.WriteException(exception);
+                LoggingService.WriteException(exception);
             }
         }
 
@@ -81,19 +92,20 @@ namespace SessionizeApi.Logger
 
         #region Rooms
 
-        private static void PrintRooms(Room[] rooms)
+        [Conditional("DEBUG")]
+        private void PrintRooms(Room[] rooms)
         {
             if (!(rooms?.Length > 1))
                 return;
 
             try
             {
-                LoggingService?.WriteSubheader("Rooms");
-                LoggingService?.WriteList(rooms);
+                LoggingService.WriteSubheader("Rooms");
+                LoggingService.WriteList(rooms);
             }
             catch (Exception exception)
             {
-                LoggingService?.WriteException(exception);
+                LoggingService.WriteException(exception);
             }
         }
 
@@ -101,19 +113,20 @@ namespace SessionizeApi.Logger
 
         #region Speakers
 
-        private static void PrintSpeakers(Speaker[] speakers)
+        [Conditional("DEBUG")]
+        private void PrintSpeakers(Speaker[] speakers)
         {
             if (!(speakers?.Length > 1))
                 return;
 
             try
             {
-                LoggingService?.WriteSubheader("Speakers");
-                LoggingService?.WriteList(speakers);
+                LoggingService.WriteSubheader("Speakers");
+                LoggingService.WriteList(speakers);
             }
             catch (Exception exception)
             {
-                LoggingService?.WriteException(exception);
+                LoggingService.WriteException(exception);
             }
         }
 
@@ -121,20 +134,21 @@ namespace SessionizeApi.Logger
 
         #region Sessions
 
-        private static void PrintSessions(Session[] sessions)
+        [Conditional("DEBUG")]
+        private void PrintSessions(Session[] sessions)
         {
             if (!(sessions?.Length > 1))
                 return;
 
             try
             {
-                LoggingService?.WriteSubheader("Sessions");
-                LoggingService?.WriteList(sessions);
+                LoggingService.WriteSubheader("Sessions");
+                LoggingService.WriteList(sessions);
 
             }
             catch (Exception exception)
             {
-                LoggingService?.WriteException(exception);
+                LoggingService.WriteException(exception);
             }
         }
 

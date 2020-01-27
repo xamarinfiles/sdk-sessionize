@@ -1,6 +1,7 @@
-﻿using FancyLogger;
+using FancyLogger;
 using SessionizeApi.Models;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -11,13 +12,15 @@ namespace SessionizeApi.Loader
     {
         #region Services
 
-        internal static FancyLoggerService LoggingService { get; set; }
+        private static FancyLoggerService LoggingService { get; set; }
 
         #endregion
 
+        internal SessionizeLoader(FancyLoggerService loggingService) => LoggingService = loggingService;
+
         #region Event Loader
 
-        internal static Event LoadEvent(string eventJsonFileName)
+        internal Event LoadEvent(string eventJsonFileName)
         {
             try
             {
@@ -27,17 +30,14 @@ namespace SessionizeApi.Loader
                     return null;
 
                 var @event = Event.FromJson(allDataJson);
-
-#if DEBUG
                 @event.DebuggerDisplay = eventJsonFileName;
                 PopulateDependencies(ref @event);
-#endif
 
                 return @event;
             }
             catch (Exception exception)
             {
-                LoggingService?.WriteException(exception);
+                LoggingService.WriteException(exception);
 
                 return null;
             }
@@ -55,7 +55,7 @@ namespace SessionizeApi.Loader
             }
             catch (Exception exception)
             {
-                LoggingService?.WriteException(exception);
+                LoggingService.WriteException(exception);
 
                 return null;
             }

@@ -1,4 +1,4 @@
-using FancyLogger;
+﻿using FancyLogger;
 using SessionizeApi.Loader;
 using SessionizeApi.Logger;
 using SessionizeApi.Samples;
@@ -13,24 +13,29 @@ namespace SessionizeApi.Models.Console
 
         private static FancyLoggerService LoggingService { get; set; }
 
+        private static SessionizeLoader SessionizeLoader { get; set; }
+
+        private static SessionizeLogger SessionizeLogger { get; set; }
+
         #endregion
 
-        #region Main
+        #region Setup
 
-        public static void Main()
+        internal static void Main()
         {
             try
             {
                 LoggingService = new FancyLoggerService();
 
-                SessionizeLoader.LoggingService = LoggingService;
-                SessionizeLogger.LoggingService = LoggingService;
+                SessionizeLogger = new SessionizeLogger(LoggingService);
+
+                SessionizeLoader = new SessionizeLoader(LoggingService);
 
                 ImportAndPrintEvent(Filenames.OrlandoCodeCamp2020AllData);
             }
             catch (Exception exception)
             {
-                LoggingService?.WriteException(exception);
+                LoggingService.WriteException(exception);
             }
         }
 
@@ -49,7 +54,7 @@ namespace SessionizeApi.Models.Console
             }
             catch (Exception exception)
             {
-                LoggingService?.WriteException(exception);
+                LoggingService.WriteException(exception);
             }
         }
 
