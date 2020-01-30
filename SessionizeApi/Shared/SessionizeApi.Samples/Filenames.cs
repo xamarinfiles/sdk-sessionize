@@ -1,6 +1,6 @@
 ﻿namespace SessionizeApi.Samples
 {
-    internal class Filenames
+    internal static class Filenames
     {
         #region API
 
