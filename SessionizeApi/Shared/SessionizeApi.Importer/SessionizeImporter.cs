@@ -1,4 +1,4 @@
-using FancyLogger;
+﻿using FancyLogger;
 using SessionizeApi.Models;
 using System;
 using System.Collections.Generic;
@@ -6,9 +6,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
-namespace SessionizeApi.Loader
+namespace SessionizeApi.Importer
 {
-    internal static class SessionizeLoader
+    internal class SessionizeImporter
     {
         #region Services
 
@@ -16,11 +16,17 @@ namespace SessionizeApi.Loader
 
         #endregion
 
-        internal SessionizeLoader(FancyLoggerService loggingService) => LoggingService = loggingService;
+        #region Constructor
 
-        #region Event Loader
+        // TODO Fix CodeRush formatting
+        internal SessionizeImporter(FancyLoggerService loggingService) => LoggingService = loggingService;
 
-        internal Event LoadEvent(string eventJsonFileName)
+        #endregion
+
+        #region Event Importer
+
+        internal Event LoadEvent(string eventJsonFileName,
+            CustomSort sort = CustomSort.Unsorted)
         {
             try
             {
@@ -33,7 +39,9 @@ namespace SessionizeApi.Loader
                 @event.DebuggerDisplay = eventJsonFileName;
                 PopulateDependencies(ref @event);
 
-                return @event;
+                var @transformedEvent = TransformEvent(@event, sort);
+
+                return @transformedEvent;
             }
             catch (Exception exception)
             {
@@ -42,6 +50,9 @@ namespace SessionizeApi.Loader
                 return null;
             }
         }
+
+        // TODO Fix CodeRush formatting
+        protected virtual Event TransformEvent(Event @event, CustomSort sort) => @event;
 
         #endregion
 

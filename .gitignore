@@ -331,3 +331,5 @@ ASALocalRun/
 
 # Real event data for testing
 SessionizeApi/Shared/SessionizeApi.Samples/Events/
+
+SessionizeApi/Shared/SessionizeApi.Loader/

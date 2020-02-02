@@ -1,0 +1,5 @@
+﻿enum CustomSort
+{
+    Unsorted,
+    CollectSpeakerSessionsByFirstSubmission
+}

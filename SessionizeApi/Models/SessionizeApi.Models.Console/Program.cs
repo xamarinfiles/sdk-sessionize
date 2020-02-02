@@ -1,9 +1,9 @@
 ﻿using FancyLogger;
-using SessionizeApi.Loader;
+using SessionizeApi.Importer;
+using SessionizeApi.Importer.Events;
 using SessionizeApi.Logger;
 using SessionizeApi.Samples;
 using System;
-using System.Diagnostics;
 
 namespace SessionizeApi.Models.Console
 {
@@ -13,7 +13,7 @@ namespace SessionizeApi.Models.Console
 
         private static FancyLoggerService LoggingService { get; set; }
 
-        private static SessionizeLoader SessionizeLoader { get; set; }
+        private static SessionizeImporter SessionizeImporter { get; set; }
 
         private static SessionizeLogger SessionizeLogger { get; set; }
 
@@ -26,10 +26,8 @@ namespace SessionizeApi.Models.Console
             try
             {
                 LoggingService = new FancyLoggerService();
-
                 SessionizeLogger = new SessionizeLogger(LoggingService);
-
-                SessionizeLoader = new SessionizeLoader(LoggingService);
+                SessionizeImporter = new OrlandoCodeCampSessionizeImporter(LoggingService);
 
                 ImportAndPrintEvent(Filenames.OrlandoCodeCamp2020AllData);
             }
@@ -43,12 +41,13 @@ namespace SessionizeApi.Models.Console
 
         #region Debugging / Discovery / Verification
 
-        [Conditional("DEBUG")]
         private static void ImportAndPrintEvent(string eventJsonFileName)
         {
             try
             {
-                var @event = SessionizeLoader.LoadEvent(eventJsonFileName);
+                var @event =
+                    SessionizeImporter.LoadEvent(eventJsonFileName,
+                        CustomSort.CollectSpeakerSessionsByFirstSubmission);
 
                 SessionizeLogger.PrintEvent(@event);
             }

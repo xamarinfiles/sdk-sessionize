@@ -6,7 +6,7 @@
     <StartupObject>SessionizeApi.Models.Console.Program</StartupObject>
   </PropertyGroup>
 
-  <Import Project="..\..\Shared\SessionizeApi.Loader\SessionizeApi.Loader.projitems" Label="Shared" />
+  <Import Project="..\..\Shared\SessionizeApi.Importer\SessionizeApi.Importer.projitems" Label="Shared" />
 
   <Import Project="..\..\Shared\SessionizeApi.Logger\SessionizeApi.Logger.projitems" Label="Shared" />
 

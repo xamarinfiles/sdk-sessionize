@@ -19,11 +19,17 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SessionizeApi.Logger", "Sha
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SessionizeApi.Samples", "Shared\SessionizeApi.Samples\SessionizeApi.Samples.shproj", "{A7CB9C0A-6552-43C0-BBC2-0C831B449A9D}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SessionizeApi.Loader", "Shared\SessionizeApi.Loader\SessionizeApi.Loader.shproj", "{630324D6-9EC2-44A5-984A-CAD73CC53BA5}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SessionizeApi.Importer", "Shared\SessionizeApi.Importer\SessionizeApi.Importer.shproj", "{AAEA3665-FDAE-4593-AFA9-98F6244A4F92}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Trello", "Trello", "{74079549-28B2-451C-AA43-C82532442E6F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SessionizeApi.Trello", "Trello\SessionizeApi.Trello\SessionizeApi.Trello.csproj", "{B2ADF008-7BFD-4091-B8EB-3083C35EF8E2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SessionizeApi.Trello.Console", "Trello\SessionizeApi.Trello.Console\SessionizeApi.Trello.Console.csproj", "{C70E96A1-7F2D-4833-AD29-2437CFE5CB55}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Shared\SessionizeApi.Loader\SessionizeApi.Loader.projitems*{630324d6-9ec2-44a5-984a-cad73cc53ba5}*SharedItemsImports = 13
+		Shared\SessionizeApi.Importer\SessionizeApi.Importer.projitems*{aaea3665-fdae-4593-afa9-98f6244a4f92}*SharedItemsImports = 13
 		Shared\SessionizeApi.Logger\SessionizeApi.Logger.projitems*{71f9a0db-1155-41a2-8cde-0095179e386c}*SharedItemsImports = 13
 		Shared\SessionizeApi.Samples\SessionizeApi.Samples.projitems*{a7cb9c0a-6552-43c0-bbc2-0c831b449a9d}*SharedItemsImports = 13
 	EndGlobalSection
@@ -40,6 +46,14 @@ Global
 		{CA9EF72E-7C89-483A-8BEF-48638DA02B1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA9EF72E-7C89-483A-8BEF-48638DA02B1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA9EF72E-7C89-483A-8BEF-48638DA02B1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2ADF008-7BFD-4091-B8EB-3083C35EF8E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2ADF008-7BFD-4091-B8EB-3083C35EF8E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2ADF008-7BFD-4091-B8EB-3083C35EF8E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2ADF008-7BFD-4091-B8EB-3083C35EF8E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C70E96A1-7F2D-4833-AD29-2437CFE5CB55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C70E96A1-7F2D-4833-AD29-2437CFE5CB55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C70E96A1-7F2D-4833-AD29-2437CFE5CB55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C70E96A1-7F2D-4833-AD29-2437CFE5CB55}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -49,7 +63,9 @@ Global
 		{CA9EF72E-7C89-483A-8BEF-48638DA02B1A} = {56AEC191-A3A6-480D-A04B-7DDA1DC52C91}
 		{71F9A0DB-1155-41A2-8CDE-0095179E386C} = {88FB9C39-156F-40D0-8809-5663CDE3E52D}
 		{A7CB9C0A-6552-43C0-BBC2-0C831B449A9D} = {88FB9C39-156F-40D0-8809-5663CDE3E52D}
-		{630324D6-9EC2-44A5-984A-CAD73CC53BA5} = {88FB9C39-156F-40D0-8809-5663CDE3E52D}
+		{B2ADF008-7BFD-4091-B8EB-3083C35EF8E2} = {74079549-28B2-451C-AA43-C82532442E6F}
+		{C70E96A1-7F2D-4833-AD29-2437CFE5CB55} = {74079549-28B2-451C-AA43-C82532442E6F}
+		{AAEA3665-FDAE-4593-AFA9-98F6244A4F92} = {88FB9C39-156F-40D0-8809-5663CDE3E52D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {748E59E2-DFB0-4B4E-9F63-7702D4AB2B87}
