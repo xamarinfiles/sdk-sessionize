@@ -10,7 +10,7 @@ namespace SessionizeApi.Models
     public class Session
     {
         [JsonProperty("id")]
-        public int Id { get; set; }
+        public Id Id { get; set; }
 
         [JsonProperty("title")]
         public string Title { get; set; }

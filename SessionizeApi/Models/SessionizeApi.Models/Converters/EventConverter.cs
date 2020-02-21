@@ -4,16 +4,16 @@ using System.Globalization;
 
 namespace SessionizeApi.Models.Converters
 {
-    internal static class EventConverter
+    public static class EventConverter
     {
-        internal static readonly JsonSerializerSettings Settings =
+        public static readonly JsonSerializerSettings Settings =
             new JsonSerializerSettings
             {
                 MetadataPropertyHandling = MetadataPropertyHandling.Ignore,
                 DateParseHandling = DateParseHandling.None,
                 Converters =
                 {
-                    // DEL IdConverter.Singleton,
+                    IdConverter.Singleton,
                     new IsoDateTimeConverter
                         {DateTimeStyles = DateTimeStyles.AssumeUniversal}
                 },

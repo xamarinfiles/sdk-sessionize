@@ -20,21 +20,30 @@ namespace SessionizeApi.Importer.Events
 
         protected override Event TransformEvent(Event @event, CustomSort sort)
         {
-            switch (sort)
+            try
             {
-                case CustomSort.Unsorted:
-                    break;
-                case CustomSort.CollectSpeakerSessionsByFirstSubmission:
-                    var groupedSessions =
-                        @event.Sessions.GroupBy(session => session.SpeakerIds.First());
-                    var reorderedSessions =
-                        groupedSessions.SelectMany(session => session).ToArray();
+                switch(sort)
+                {
+                    case CustomSort.Unsorted:
+                        break;
+                    case CustomSort.CollectSpeakerSessionsByFirstSubmission:
+                        var speakerSessions =
+                            @event.Sessions.Where(session => session.SpeakerIds?.Length > 0);
+                        var groupedSessions =
+                            speakerSessions.GroupBy(session => session.SpeakerIds.First());
+                        var reorderedSessions =
+                            groupedSessions.SelectMany(session => session).ToArray();
 
-                    @event.Sessions = reorderedSessions;
-                    break;
+                        @event.Sessions = reorderedSessions;
+                        break;
+                }
+
+                return @event;
             }
-
-            return @event;
+            catch(System.Exception)
+            {
+                return null;
+            }
         }
 
         #endregion

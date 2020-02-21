@@ -9,12 +9,21 @@ namespace SessionizeApi.Models
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     public class Event
     {
-        public static Event FromJson(string json)
+        public static Event FromJson(string json, string eventSource = null)
         {
-            var @event = JsonConvert.DeserializeObject<Event>(json,
-                EventConverter.Settings);
+            try
+            {
 
-            return @event;
+                var @event =
+                    JsonConvert.DeserializeObject<Event>(json, EventConverter.Settings);
+                @event.DebuggerDisplay = eventSource ?? string.Empty;
+
+                return @event;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         [JsonProperty("categories")]
