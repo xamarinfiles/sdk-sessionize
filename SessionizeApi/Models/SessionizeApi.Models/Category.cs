@@ -26,7 +26,6 @@ namespace SessionizeApi.Models
 
         public virtual string LogDisplay => DebuggerDisplay;
 
-        // TODO Add Items
         public override string ToString()
         {
             try
@@ -41,7 +40,7 @@ namespace SessionizeApi.Models
             {
                 Debug.WriteLine(exception.Message);
 
-                return $"{Id} - {Sort} - {Title}";
+                return DebuggerDisplay;
             }
         }
 

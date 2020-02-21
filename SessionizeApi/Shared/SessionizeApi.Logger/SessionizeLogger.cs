@@ -15,7 +15,6 @@ namespace SessionizeApi.Logger
 
         #region Constructor
 
-        // TODO Fix CodeRush formatting
         internal SessionizeLogger(FancyLoggerService loggingService) => LoggingService = loggingService;
 
         #endregion
