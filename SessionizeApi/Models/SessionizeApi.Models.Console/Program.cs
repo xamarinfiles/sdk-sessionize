@@ -29,7 +29,12 @@ namespace SessionizeApi.Models.Console
                 SessionizeLogger = new SessionizeLogger(LoggingService);
                 SessionizeImporter = new OrlandoCodeCampSessionizeImporter(LoggingService);
 
-                ImportAndPrintEvent(Filenames.OrlandoCodeCamp2020AllData);
+                var occ2020files = new Filenames.Event.Local("OrlandoCodeCamp", 2020);
+                ImportAndPrintEventFromFile(occ2020files.AllData);
+
+                // TODO Pass your Sessionize ID (below is their sample event ID)
+                var occ2020web = new Filenames.Event.Web("jl4ktls0");
+                ImportAndPrintEventFromUri(occ2020web.AllData);
             }
             catch (Exception exception)
             {
@@ -41,12 +46,28 @@ namespace SessionizeApi.Models.Console
 
         #region Debugging / Discovery / Verification
 
-        private static void ImportAndPrintEvent(string eventJsonFileName)
+        private static void ImportAndPrintEventFromFile(string eventJsonFileName)
         {
             try
             {
                 var @event =
-                    SessionizeImporter.LoadEvent(eventJsonFileName,
+                    SessionizeImporter.ImportAllDataFromFile(eventJsonFileName,
+                        CustomSort.CollectSpeakerSessionsByFirstSubmission);
+
+                SessionizeLogger.PrintEvent(@event);
+            }
+            catch (Exception exception)
+            {
+                LoggingService.WriteException(exception);
+            }
+        }
+
+        private static void ImportAndPrintEventFromUri(Uri eventJsonUri)
+        {
+            try
+            {
+                var @event =
+                    SessionizeImporter.ImportAllDataFromUri(eventJsonUri,
                         CustomSort.CollectSpeakerSessionsByFirstSubmission);
 
                 SessionizeLogger.PrintEvent(@event);
