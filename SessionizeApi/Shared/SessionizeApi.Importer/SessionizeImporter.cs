@@ -1,4 +1,4 @@
-﻿using FancyLogger;
+using FancyLogger;
 using SessionizeApi.Models;
 using System;
 using System.Collections.Generic;
@@ -89,8 +89,10 @@ namespace SessionizeApi.Importer
         [Conditional("DEBUG")]
         private static void PopulateIndexDictionaries(ref Event @event)
         {
+            // Only include speaker sessions and not special sessions
             @event.SessionDictionary =
-                @event.Sessions.ToDictionary(s => s.Id);
+                @event.Sessions.Where(s => s.Id.Integer != null)
+                    .ToDictionary(s => (int) s.Id.Integer);
 
             @event.SpeakerDictionary =
                 @event.Speakers.ToDictionary(s => s.Id);
