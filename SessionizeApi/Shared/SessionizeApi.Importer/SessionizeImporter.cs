@@ -1,4 +1,4 @@
-using FancyLogger;
+﻿using FancyLogger;
 using SessionizeApi.Models;
 using System;
 using System.Collections.Generic;
@@ -18,30 +18,41 @@ namespace SessionizeApi.Importer
 
         #region Constructor
 
-        // TODO Fix CodeRush formatting
-        internal SessionizeImporter(FancyLoggerService loggingService) => LoggingService = loggingService;
+        internal SessionizeImporter(FancyLoggerService loggingService) =>
+            LoggingService = loggingService;
 
         #endregion
 
-        #region Event Importer
+        #region All Data (Full Event) Importer
 
-        internal Event LoadEvent(string eventJsonFileName,
-            CustomSort sort = CustomSort.Unsorted)
+        public Event ImportAllDataFromFile(string allDataJsonFilename,
+                                           CustomSort customSort = CustomSort.Unsorted)
+        {
+            var allDataJson = GetContentTextFile(allDataJsonFilename);
+
+            var @event =
+                ImportAllDataFromJson(allDataJson, customSort, allDataJsonFilename);
+
+            return @event;
+        }
+
+        public Event ImportAllDataFromUri(Uri allDataJsonUri,
+            CustomSort customSort = CustomSort.Unsorted)
         {
             try
             {
-                var allDataJson = GetContentTextFile(eventJsonFileName);
+                Event @event = null;
 
-                if (allDataJson == null)
-                    return null;
+                using (var client = new System.Net.WebClient())
+                {
+                    var allDataJson = client.DownloadString(allDataJsonUri);
 
-                var @event = Event.FromJson(allDataJson);
-                @event.DebuggerDisplay = eventJsonFileName;
-                PopulateDependencies(ref @event);
+                    var eventSource = allDataJsonUri.AbsoluteUri;
 
-                var @transformedEvent = TransformEvent(@event, sort);
+                    @event = ImportAllDataFromJson(allDataJson, customSort, eventSource);
+                }
 
-                return @transformedEvent;
+                return @event;
             }
             catch (Exception exception)
             {
@@ -51,18 +62,48 @@ namespace SessionizeApi.Importer
             }
         }
 
-        // TODO Fix CodeRush formatting
+        public Event ImportAllDataFromJson(string allDataJson,
+            CustomSort customSort = CustomSort.Unsorted, string eventSource = null)
+        {
+            try
+            {
+                if (allDataJson == null)
+                    return null;
+
+                var @event = Event.FromJson(allDataJson, eventSource);
+                PopulateDependencies(ref @event);
+
+                var transformedEvent = TransformEvent(@event, customSort);
+
+                if (transformedEvent != null)
+                {
+                    return transformedEvent;
+                }
+
+                LoggingService.WriteWarning(
+                    $"Event transformation failed {customSort} - Using default sort");
+
+                return @event;
+            }
+            catch (Exception exception)
+            {
+                LoggingService.WriteException(exception);
+
+                return null;
+            }
+        }
+
         protected virtual Event TransformEvent(Event @event, CustomSort sort) => @event;
 
         #endregion
 
         #region File Handling
 
-        private static string GetContentTextFile(string filename)
+        private static string GetContentTextFile(string path)
         {
             try
             {
-                return File.ReadAllText(filename);
+                return File.ReadAllText(path);
             }
             catch (Exception exception)
             {
@@ -74,7 +115,7 @@ namespace SessionizeApi.Importer
 
         #endregion
 
-        #region Dependent Objects
+        #region Dependent Objects (DEBUG only)
 
         [Conditional("DEBUG")]
         private static void PopulateDependencies(ref Event @event)
