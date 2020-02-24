@@ -72,7 +72,7 @@ namespace SessionizeApi.Models
             {
                 Debug.WriteLine(exception.Message);
 
-                return $"{FullName,-20} - {SessionIds.Length,-2} - {Id}";
+                return DebuggerDisplay;
             }
         }
 

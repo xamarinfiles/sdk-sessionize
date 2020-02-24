@@ -71,7 +71,7 @@ namespace SessionizeApi.Models
             {
                 Debug.WriteLine(exception.Message);
 
-                return $"{Id} - {Title,-70}";
+                return DebuggerDisplay;
             }
         }
 
