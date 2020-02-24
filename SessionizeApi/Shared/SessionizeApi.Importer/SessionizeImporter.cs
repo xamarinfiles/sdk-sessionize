@@ -25,19 +25,20 @@ namespace SessionizeApi.Importer
 
         #region All Data (Full Event) Importer
 
-        public Event ImportAllDataFromFile(string allDataJsonFilename,
-                                           CustomSort customSort = CustomSort.Unsorted)
+        public Event ImportAllDataFromFile(string jsonFilename,
+            CustomSort customSort = CustomSort.Unsorted, bool includeDependencies = false)
         {
-            var allDataJson = GetContentTextFile(allDataJsonFilename);
+            var allDataJson = GetContentTextFile(jsonFilename);
 
             var @event =
-                ImportAllDataFromJson(allDataJson, customSort, allDataJsonFilename);
+                ImportAllDataFromJson(allDataJson, customSort, includeDependencies,
+                    jsonFilename);
 
             return @event;
         }
 
-        public Event ImportAllDataFromUri(Uri allDataJsonUri,
-            CustomSort customSort = CustomSort.Unsorted)
+        public Event ImportAllDataFromUri(Uri jsonUri,
+            CustomSort customSort = CustomSort.Unsorted, bool includeDependencies = false)
         {
             try
             {
@@ -45,11 +46,12 @@ namespace SessionizeApi.Importer
 
                 using (var client = new System.Net.WebClient())
                 {
-                    var allDataJson = client.DownloadString(allDataJsonUri);
+                    var allDataJson = client.DownloadString(jsonUri);
 
-                    var eventSource = allDataJsonUri.AbsoluteUri;
+                    var eventSource = jsonUri.AbsoluteUri;
 
-                    @event = ImportAllDataFromJson(allDataJson, customSort, eventSource);
+                    @event = ImportAllDataFromJson(allDataJson, customSort,
+                        includeDependencies, eventSource);
                 }
 
                 return @event;
@@ -63,7 +65,8 @@ namespace SessionizeApi.Importer
         }
 
         public Event ImportAllDataFromJson(string allDataJson,
-            CustomSort customSort = CustomSort.Unsorted, string eventSource = null)
+            CustomSort customSort = CustomSort.Unsorted, bool includeDependencies = false,
+            string eventSource = null)
         {
             try
             {
@@ -71,7 +74,8 @@ namespace SessionizeApi.Importer
                     return null;
 
                 var @event = Event.FromJson(allDataJson, eventSource);
-                PopulateDependencies(ref @event);
+                if (includeDependencies)
+                    PopulateDependencies(ref @event);
 
                 var transformedEvent = TransformEvent(@event, customSort);
 
@@ -115,9 +119,8 @@ namespace SessionizeApi.Importer
 
         #endregion
 
-        #region Dependent Objects (DEBUG only)
+        #region Dependent Objects
 
-        [Conditional("DEBUG")]
         private static void PopulateDependencies(ref Event @event)
         {
             PopulateIndexDictionaries(ref @event);
@@ -127,7 +130,6 @@ namespace SessionizeApi.Importer
             // TODO Add Questions
         }
 
-        [Conditional("DEBUG")]
         private static void PopulateIndexDictionaries(ref Event @event)
         {
             // Only include speaker sessions and not special sessions
@@ -148,7 +150,6 @@ namespace SessionizeApi.Importer
             }
         }
 
-        [Conditional("DEBUG")]
         private static void PopulateSessionDependencies(ref Event @event)
         {
             foreach (var (session, speakerId) in
@@ -160,7 +161,6 @@ namespace SessionizeApi.Importer
             }
         }
 
-        [Conditional("DEBUG")]
         private static void PopulateSpeakerDependencies(ref Event @event)
         {
             foreach (var (speaker, sessionId) in
@@ -172,7 +172,6 @@ namespace SessionizeApi.Importer
             }
         }
 
-        [Conditional("DEBUG")]
         private static void PopulateCategoryDependencies(ref Event @event)
         {
             foreach (var (session, itemId) in
