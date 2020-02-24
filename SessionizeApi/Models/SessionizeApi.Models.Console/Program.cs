@@ -19,7 +19,7 @@ namespace SessionizeApi.Models.Console
 
         #endregion
 
-        #region Setup
+        #region Testing
 
         internal static void Main()
         {
@@ -30,11 +30,11 @@ namespace SessionizeApi.Models.Console
                 SessionizeImporter = new OrlandoCodeCampSessionizeImporter(LoggingService);
 
                 var occ2020files = new Filenames.Event.Local("OrlandoCodeCamp", 2020);
-                ImportAndPrintEventFromFile(occ2020files.AllData);
+                PrintEventFromFile(occ2020files.AllData);
 
-                // TODO Pass your Sessionize ID (below is their sample event ID)
+                // REUSE Pass your Sessionize ID (below is their sample event ID)
                 var occ2020web = new Filenames.Event.Web("jl4ktls0");
-                ImportAndPrintEventFromUri(occ2020web.AllData);
+                PrintEventFromUri(occ2020web.AllData);
             }
             catch (Exception exception)
             {
@@ -46,12 +46,12 @@ namespace SessionizeApi.Models.Console
 
         #region Debugging / Discovery / Verification
 
-        private static void ImportAndPrintEventFromFile(string eventJsonFileName)
+        private static void PrintEventFromFile(string jsonFilename)
         {
             try
             {
                 var @event =
-                    SessionizeImporter.ImportAllDataFromFile(eventJsonFileName,
+                    SessionizeImporter.ImportAllDataFromFile(jsonFilename,
                         CustomSort.CollectSpeakerSessionsByFirstSubmission);
 
                 SessionizeLogger.PrintEvent(@event);
@@ -62,12 +62,12 @@ namespace SessionizeApi.Models.Console
             }
         }
 
-        private static void ImportAndPrintEventFromUri(Uri eventJsonUri)
+        private static void PrintEventFromUri(Uri jsonUri)
         {
             try
             {
                 var @event =
-                    SessionizeImporter.ImportAllDataFromUri(eventJsonUri,
+                    SessionizeImporter.ImportAllDataFromUri(jsonUri,
                         CustomSort.CollectSpeakerSessionsByFirstSubmission);
 
                 SessionizeLogger.PrintEvent(@event);
