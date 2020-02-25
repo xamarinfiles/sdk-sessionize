@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <StartupObject>SessionizeApi.SocialMedia.Console.Program</StartupObject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FancyLogger" Version="1.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Models\SessionizeApi.Models\SessionizeApi.Models.csproj" />
+    <ProjectReference Include="..\SessionizeApi.SocialMedia\SessionizeApi.SocialMedia.csproj" />
+  </ItemGroup>
+
+  <Import Project="..\..\Shared\SessionizeApi.Importer\SessionizeApi.Importer.projitems" Label="Shared" />
+
+  <Import Project="..\..\Shared\SessionizeApi.Samples\SessionizeApi.Samples.projitems" Label="Shared" />
+
+</Project>

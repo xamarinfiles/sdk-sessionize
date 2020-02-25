@@ -27,11 +27,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SessionizeApi.Trello", "Tre
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SessionizeApi.Trello.Console", "Trello\SessionizeApi.Trello.Console\SessionizeApi.Trello.Console.csproj", "{C70E96A1-7F2D-4833-AD29-2437CFE5CB55}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Social Media", "Social Media", "{F1E5A391-1FC6-45B8-BEA0-47BEC3F5FD28}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SessionizeApi.SocialMedia", "SocialMedia\SessionizeApi.SocialMedia\SessionizeApi.SocialMedia.csproj", "{3A6F6EC3-3F95-400E-ABCD-8A85B39B7739}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SessionizeApi.SocialMedia.Console", "SocialMedia\SessionizeApi.SocialMedia.Console\SessionizeApi.SocialMedia.Console.csproj", "{537016DF-59E7-4830-866F-7B83C8F2FE80}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Shared\SessionizeApi.Importer\SessionizeApi.Importer.projitems*{aaea3665-fdae-4593-afa9-98f6244a4f92}*SharedItemsImports = 13
 		Shared\SessionizeApi.Logger\SessionizeApi.Logger.projitems*{71f9a0db-1155-41a2-8cde-0095179e386c}*SharedItemsImports = 13
 		Shared\SessionizeApi.Samples\SessionizeApi.Samples.projitems*{a7cb9c0a-6552-43c0-bbc2-0c831b449a9d}*SharedItemsImports = 13
+		Shared\SessionizeApi.Importer\SessionizeApi.Importer.projitems*{aaea3665-fdae-4593-afa9-98f6244a4f92}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +60,14 @@ Global
 		{C70E96A1-7F2D-4833-AD29-2437CFE5CB55}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C70E96A1-7F2D-4833-AD29-2437CFE5CB55}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C70E96A1-7F2D-4833-AD29-2437CFE5CB55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A6F6EC3-3F95-400E-ABCD-8A85B39B7739}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A6F6EC3-3F95-400E-ABCD-8A85B39B7739}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A6F6EC3-3F95-400E-ABCD-8A85B39B7739}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A6F6EC3-3F95-400E-ABCD-8A85B39B7739}.Release|Any CPU.Build.0 = Release|Any CPU
+		{537016DF-59E7-4830-866F-7B83C8F2FE80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{537016DF-59E7-4830-866F-7B83C8F2FE80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{537016DF-59E7-4830-866F-7B83C8F2FE80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{537016DF-59E7-4830-866F-7B83C8F2FE80}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -63,9 +77,11 @@ Global
 		{CA9EF72E-7C89-483A-8BEF-48638DA02B1A} = {56AEC191-A3A6-480D-A04B-7DDA1DC52C91}
 		{71F9A0DB-1155-41A2-8CDE-0095179E386C} = {88FB9C39-156F-40D0-8809-5663CDE3E52D}
 		{A7CB9C0A-6552-43C0-BBC2-0C831B449A9D} = {88FB9C39-156F-40D0-8809-5663CDE3E52D}
+		{AAEA3665-FDAE-4593-AFA9-98F6244A4F92} = {88FB9C39-156F-40D0-8809-5663CDE3E52D}
 		{B2ADF008-7BFD-4091-B8EB-3083C35EF8E2} = {74079549-28B2-451C-AA43-C82532442E6F}
 		{C70E96A1-7F2D-4833-AD29-2437CFE5CB55} = {74079549-28B2-451C-AA43-C82532442E6F}
-		{AAEA3665-FDAE-4593-AFA9-98F6244A4F92} = {88FB9C39-156F-40D0-8809-5663CDE3E52D}
+		{3A6F6EC3-3F95-400E-ABCD-8A85B39B7739} = {F1E5A391-1FC6-45B8-BEA0-47BEC3F5FD28}
+		{537016DF-59E7-4830-866F-7B83C8F2FE80} = {F1E5A391-1FC6-45B8-BEA0-47BEC3F5FD28}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {748E59E2-DFB0-4B4E-9F63-7702D4AB2B87}
