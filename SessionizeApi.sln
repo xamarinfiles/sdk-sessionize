@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Importer", "Importer", "{CCF1CF3A-1AC2-4EC0-9D90-676F8AE8A601}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{42BB49CF-D44C-4E93-BBCB-9A718BAF00AB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SocialMedia", "SocialMedia", "{8E11D8C7-111F-4AFB-A181-C8B392101097}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schedule", "Schedule", "{89D0499B-2DC7-4F39-8FD4-E073553F222C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SessionizeApi.Importer", "Importer\SessionizeApi.Importer\SessionizeApi.Importer.csproj", "{C903C6AB-8159-4561-80A6-3AB80924889C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SessionizeApi.Importer.Tests.Smoke", "Importer\SessionizeApi.Importer.Tests.Smoke\SessionizeApi.Importer.Tests.Smoke.csproj", "{9E53516D-746B-4103-A1C7-A0C939A3B74D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SessionizeApi.Trello", "Schedule\SessionizeApi.Trello\SessionizeApi.Trello.csproj", "{FA64240C-E695-4457-89A4-BD375FA05445}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SessionizeApi.Trello.Tests.Smoke", "Schedule\SessionizeApi.Trello.Tests.Smoke\SessionizeApi.Trello.Tests.Smoke.csproj", "{1CB89407-BC85-43BD-A834-82A3FEC60742}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C903C6AB-8159-4561-80A6-3AB80924889C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C903C6AB-8159-4561-80A6-3AB80924889C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C903C6AB-8159-4561-80A6-3AB80924889C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C903C6AB-8159-4561-80A6-3AB80924889C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E53516D-746B-4103-A1C7-A0C939A3B74D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E53516D-746B-4103-A1C7-A0C939A3B74D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E53516D-746B-4103-A1C7-A0C939A3B74D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E53516D-746B-4103-A1C7-A0C939A3B74D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA64240C-E695-4457-89A4-BD375FA05445}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA64240C-E695-4457-89A4-BD375FA05445}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA64240C-E695-4457-89A4-BD375FA05445}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA64240C-E695-4457-89A4-BD375FA05445}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CB89407-BC85-43BD-A834-82A3FEC60742}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CB89407-BC85-43BD-A834-82A3FEC60742}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CB89407-BC85-43BD-A834-82A3FEC60742}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CB89407-BC85-43BD-A834-82A3FEC60742}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C903C6AB-8159-4561-80A6-3AB80924889C} = {CCF1CF3A-1AC2-4EC0-9D90-676F8AE8A601}
+		{9E53516D-746B-4103-A1C7-A0C939A3B74D} = {CCF1CF3A-1AC2-4EC0-9D90-676F8AE8A601}
+		{FA64240C-E695-4457-89A4-BD375FA05445} = {89D0499B-2DC7-4F39-8FD4-E073553F222C}
+		{1CB89407-BC85-43BD-A834-82A3FEC60742} = {89D0499B-2DC7-4F39-8FD4-E073553F222C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8A861BC1-5487-4EF2-B593-944ECFCDC44C}
+	EndGlobalSection
+EndGlobal
