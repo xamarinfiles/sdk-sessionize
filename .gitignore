@@ -329,5 +329,5 @@ ASALocalRun/
 # MFractors (Xamarin productivity tool) working folder
 .mfractor/
 
-# Real event data for testing
-SessionizeApi/Shared/SessionizeApi.Samples/Events/
+# Temporary folder for unused code and data
+\@Archive/
