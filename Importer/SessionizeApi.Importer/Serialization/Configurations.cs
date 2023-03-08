@@ -1,5 +1,4 @@
-﻿using SessionizeApi.Importer.Converters;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace SessionizeApi.Importer.Serialization
@@ -11,22 +10,23 @@ namespace SessionizeApi.Importer.Serialization
         public static JsonSerializerOptions
             GetDebugJsonOptions(bool keepNulls)
         {
-            return keepNulls ? DebugJsonOptionsWithNull : DebugJsonOptionsWithoutNull;
+            return keepNulls
+                ? DebugJsonOptionsWithNull : DebugJsonOptionsWithoutNull;
         }
 
-        public static readonly JsonSerializerOptions
+        private static readonly JsonSerializerOptions
             DebugJsonOptionsWithNull = new()
             {
                 DefaultIgnoreCondition = JsonIgnoreCondition.Never,
-                Converters = { new IdConverter() },
+                //Converters = { new IdConverter() },
                 WriteIndented = true
             };
 
-        public static readonly JsonSerializerOptions
+        private static readonly JsonSerializerOptions
             DebugJsonOptionsWithoutNull = new()
             {
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                Converters = { new IdConverter() },
+                //Converters = { new IdConverter() },
                 WriteIndented = true
             };
 
@@ -34,7 +34,7 @@ namespace SessionizeApi.Importer.Serialization
             ParseJsonOptions = new()
             {
                 AllowTrailingCommas = true,
-                Converters = { new IdConverter() },
+                //Converters = { new IdConverter() },
                 NumberHandling = JsonNumberHandling.AllowReadingFromString,
                 PropertyNameCaseInsensitive = true
             };

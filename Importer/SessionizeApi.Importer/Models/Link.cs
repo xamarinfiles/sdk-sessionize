@@ -3,16 +3,50 @@ using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
+using SessionizeApi.Importer.Dtos;
 
 namespace SessionizeApi.Importer.Models
 {
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
-    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+    [SuppressMessage("ReSharper",
+        "AutoPropertyCanBeMadeGetOnly.Global")]
+    [SuppressMessage("ReSharper",
+        "ClassNeverInstantiated.Global")]
+    [SuppressMessage("ReSharper",
+        "MemberCanBePrivate.Global")]
+    [SuppressMessage("ReSharper",
+        "UnusedAutoPropertyAccessor.Global")]
     public class Link : ILogFormattable
     {
-        #region API Properties
+        #region Constructor
+
+        private Link(LinkDto linkDto)
+        {
+            Title = linkDto.Title;
+            Url = linkDto.Url;
+            LinkType = linkDto.LinkType;
+        }
+
+        public static Link Create(LinkDto linkDto,
+            LoggingService loggingService)
+        {
+            try
+            {
+                var link = new Link(linkDto);
+
+                return link;
+            }
+            catch (Exception exception)
+            {
+                loggingService.LogExceptionRouter(exception);
+
+                return null;
+            }
+        }
+
+        #endregion
+
+        #region Original and Replacement API Properties
 
         [JsonPropertyName("title")]
         public string Title { get; set; }

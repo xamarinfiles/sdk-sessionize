@@ -1,17 +1,76 @@
-﻿using SessionizeApi.Importer.Logger;
+﻿using System;
+using SessionizeApi.Importer.Logger;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
+using SessionizeApi.Importer.Dtos;
 
 namespace SessionizeApi.Importer.Models
 {
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
-    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+    [SuppressMessage("ReSharper",
+        "AutoPropertyCanBeMadeGetOnly.Global")]
+    [SuppressMessage("ReSharper",
+        "ClassNeverInstantiated.Global")]
+    [SuppressMessage("ReSharper",
+        "MemberCanBePrivate.Global")]
+    [SuppressMessage("ReSharper",
+        "UnusedAutoPropertyAccessor.Global")]
     public class Item : ILogFormattable
     {
-        #region API Properties
+        #region Constructor
+
+        private Item(ItemDto itemDto)
+        {
+            Id = itemDto.Id;
+            Name = itemDto.Name;
+            Sort = itemDto.Sort;
+        }
+
+        private Item(Id id, string name, uint sort)
+        {
+            Id = id;
+            Name = name;
+            Sort = sort;
+        }
+
+        public static Item Create(ItemDto itemDto,
+            LoggingService loggingService)
+        {
+            try
+            {
+                var item = new Item(itemDto);
+
+                return item;
+            }
+            catch (Exception exception)
+            {
+                loggingService.LogExceptionRouter(exception);
+
+                return null;
+            }
+        }
+
+        public static Item Create(Id id, string name, uint sort,
+            LoggingService loggingService)
+        {
+            try
+            {
+                var item = new Item(id, name, sort);
+
+                return item;
+            }
+            catch (Exception exception)
+            {
+                loggingService.LogExceptionRouter(exception);
+
+                return null;
+            }
+        }
+
+        #endregion
+
+        #region Original and Replacement API Properties
 
         [JsonPropertyName("id")]
         public Id Id { get; set; }
@@ -20,7 +79,7 @@ namespace SessionizeApi.Importer.Models
         public string Name { get; set; }
 
         [JsonPropertyName("sort")]
-        public int Sort { get; set; }
+        public uint Sort { get; set; }
 
         #endregion
 
@@ -30,7 +89,7 @@ namespace SessionizeApi.Importer.Models
         public string DebuggerDisplay => $"{Id} - {Sort} - {Name}";
 
         [JsonIgnore]
-        public string LogDisplayShort => $"{Id, -3} - {Sort,-3} - {Name}";
+        public string LogDisplayShort => $"{Id,-3} - {Sort,-3} - {Name}";
 
         // TODO
         [JsonIgnore]

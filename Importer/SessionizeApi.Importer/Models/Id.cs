@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace SessionizeApi.Importer.Models
 {
@@ -20,6 +21,9 @@ namespace SessionizeApi.Importer.Models
         public static implicit operator Id(Guid guid) =>
             new() { Guid = guid };
 
+        public static implicit operator Id(string str) =>
+            ConvertIdString(str);
+
         #endregion
 
         #region Formatting Methods
@@ -31,6 +35,27 @@ namespace SessionizeApi.Importer.Models
                 : Guid != null
                     ? ((Guid)Guid).ToString()
                     : "NULL";
+        }
+
+        #endregion
+
+        #region Conversion Methods
+
+        private static Id ConvertIdString(string str)
+        {
+            if (uint.TryParse(str, out var number))
+            {
+                return new Id { Number = number };
+            }
+
+            if (System.Guid.TryParse(str, out var guid))
+            {
+                return new Id { Guid = guid };
+            }
+
+            Debug.WriteLine($"Id (string => empty) = '{str}'");
+
+            return new Id();
         }
 
         #endregion

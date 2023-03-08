@@ -1,61 +1,148 @@
-﻿using System.Collections.Generic;
+﻿using SessionizeApi.Importer.Dtos;
+using SessionizeApi.Importer.Logger;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text.Json.Serialization;
+using static SessionizeApi.Importer.Serialization.Configurations;
+using static System.Text.Json.JsonSerializer;
 
 namespace SessionizeApi.Importer.Models
 {
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-    public class Event : AllData
+    public class Event : ILogFormattable
     {
         #region Constructors
 
-        private Event(AllData allData)
+        private Event(AllDataDto allDataDto, LoggingService loggingService,
+            string eventSource)
         {
-            Sessions = allData.Sessions
-                // TEMP
+            Sessions = allDataDto.Sessions
+                .Select(sessionDto =>
+                    Session.Create(sessionDto, loggingService))
                 .OrderBy(session => session.Title)
                 .ToArray();
-            Speakers = allData.Speakers
-                // TEMP
+            Speakers = allDataDto.Speakers
+                .Select(speakerDto =>
+                    Speaker.Create(speakerDto, loggingService))
                 .OrderBy(speaker => speaker.FullName)
                 .ToArray();
-            Questions = allData.Questions;
-            Categories = allData.Categories;
-            Rooms = allData.Rooms;
-            DebuggerDisplay = allData.DebuggerDisplay;
-            LogDisplayShort = allData.LogDisplayShort;
-            LogDisplayLong = allData.LogDisplayLong;
+            Questions = allDataDto.Questions
+                .Select(questionDto =>
+                    Question.Create(questionDto, loggingService))
+                .OrderBy(question => question.Sort)
+                .ToArray();
+            Categories = allDataDto.Categories
+                .Select( categoryDto =>
+                    Category.Create(categoryDto, loggingService))
+                .OrderBy(category => category.Sort)
+                .ToArray();
+            Rooms = allDataDto.Rooms
+                .Select( roomDto =>
+                    Item.Create(roomDto, loggingService))
+                .OrderBy(room => room.Sort)
+                .ToArray();
 
-            PopulateDependencyDictionaries();
+            PopulateReferenceDictionaries();
+            FormatReferenceFields(loggingService);
 
-            FormatDependentFields();
+            FormatLogFields(eventSource, loggingService);
         }
 
-        public static Event Create(AllData allData)
+        public static Event Create(string allDataJson,
+            LoggingService loggingService, string eventSource = null)
         {
-            var @event = new Event(allData);
+            try
+            {
+                var allData = FromJson(allDataJson, loggingService, eventSource);
 
-            return @event;
+                var @event = new Event(allData, loggingService, eventSource);
+
+                return @event;
+            }
+            catch (Exception exception)
+            {
+                loggingService.LogExceptionRouter(exception);
+
+                return null;
+            }
         }
 
         #endregion
 
-        #region Dependency Properties
+        // TODO Keep as arrays?
+        #region Replacement API Properties
 
+        [JsonPropertyName("sessions")]
+        public Session[] Sessions { get; set; }
+
+        [JsonPropertyName("speakers")]
+        public Speaker[] Speakers { get; set; }
+
+        [JsonPropertyName("questions")]
+        public Question[] Questions { get; set; }
+
+        [JsonPropertyName("categories")]
+        public Category[] Categories { get; set; }
+
+        [JsonPropertyName("rooms")]
+        public Item[] Rooms { get; set; }
+
+        #endregion
+
+        #region Reference Properties
+
+        [JsonIgnore]
         public IDictionary<Id, Session> SessionDictionary { get; set; }
 
+        [JsonIgnore]
         public IDictionary<Id, Speaker> SpeakerDictionary { get; set; }
 
+        [JsonIgnore]
         public IDictionary<Id, Item> CategoryDictionary { get; set; }
 
         #endregion
 
-        #region Dependency Methods
+        #region Formatted Properties
 
-        private void PopulateDependencyDictionaries()
+        [JsonIgnore]
+        public string DebuggerDisplay { get; protected set; }
+
+        [JsonIgnore]
+        public string LogDisplayShort { get; protected set; }
+
+        [JsonIgnore]
+        public string LogDisplayLong { get; protected set; }
+
+        #endregion
+
+        #region Load Methods
+
+        private static AllDataDto FromJson(string json,
+            LoggingService loggingService, string eventSource)
+        {
+            try
+            {
+                if (Deserialize<AllDataDto>(json, ParseJsonOptions) is
+                    { } allData)
+                {
+                    return allData;
+                }
+            }
+            catch (Exception exception)
+            {
+                loggingService.LogExceptionRouter(exception);
+            }
+
+            return null;
+        }
+
+        #endregion
+
+        #region Reference Methods
+
+        private void PopulateReferenceDictionaries()
         {
             SessionDictionary =
                 Sessions.ToDictionary(session => session.Id);
@@ -74,16 +161,40 @@ namespace SessionizeApi.Importer.Models
             }
         }
 
-        private void FormatDependentFields()
+        private void FormatReferenceFields(LoggingService loggingService)
         {
             foreach (var session in Sessions)
             {
-                session.FormatDependentFields(SpeakerDictionary, CategoryDictionary);
+                session.FormatReferenceFields(SpeakerDictionary,
+                    CategoryDictionary, loggingService);
             }
 
             foreach (var speaker in Speakers)
             {
-                speaker.FormatDependentFields(SessionDictionary, CategoryDictionary);
+                speaker.FormatReferenceFields(SessionDictionary,
+                    CategoryDictionary, loggingService);
+            }
+        }
+
+        #endregion
+
+        #region Formatting Methods
+
+        private void FormatLogFields(string eventSource,
+            LoggingService loggingService)
+        {
+            try
+            {
+                DebuggerDisplay = $"Source = {eventSource ?? string.Empty}";
+                LogDisplayShort =
+                    DebuggerDisplay +
+                    $" - |Sessions| = {Sessions.Length} - |Speakers| = {Speakers.Length}";
+                // TEMP
+                LogDisplayLong = LogDisplayShort;
+            }
+            catch (Exception exception)
+            {
+                loggingService.LogExceptionRouter(exception);
             }
         }
 

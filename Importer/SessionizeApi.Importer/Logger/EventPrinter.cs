@@ -7,20 +7,20 @@ using System.Diagnostics.CodeAnalysis;
 namespace SessionizeApi.Importer.Logger
 {
     [SuppressMessage("ReSharper", "UnusedType.Global")]
-    public class SessionizeLogger
+    public class EventPrinter
     {
-        #region Services
-
-        private static LoggingService LoggingService { get; set; }
-
-        #endregion
-
         #region Constructor
 
-        public SessionizeLogger(LoggingService loggingService)
+        public EventPrinter(LoggingService loggingService)
         {
             LoggingService = loggingService;
         }
+
+        #endregion
+
+        #region Services
+
+        private LoggingService LoggingService { get; }
 
         #endregion
 
@@ -28,9 +28,9 @@ namespace SessionizeApi.Importer.Logger
 
         [Conditional("DEBUG")]
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
-        public static void PrintEvent(Event @event)
+        public void PrintEvent(Event @event, bool printEvent)
         {
-            if (@event == null)
+            if (@event == null || printEvent == false)
                 return;
 
             try
@@ -54,9 +54,10 @@ namespace SessionizeApi.Importer.Logger
         }
 
         [Conditional("DEBUG")]
-        private static void PrintArray<T>(IReadOnlyList<T> array, string label)
+        private void PrintArray<T>(IReadOnlyList<T> array, string label)
             where T : ILogFormattable
         {
+            // Make sure array is not null or empty
             if (!(array?.Count > 1))
                 return;
 

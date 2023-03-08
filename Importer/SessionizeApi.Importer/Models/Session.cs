@@ -1,8 +1,8 @@
-﻿using SessionizeApi.Importer.Logger;
+﻿using SessionizeApi.Importer.Dtos;
+using SessionizeApi.Importer.Logger;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json.Serialization;
 using static SessionizeApi.Importer.Constants.Characters;
@@ -10,13 +10,61 @@ using static SessionizeApi.Importer.Constants.Characters;
 namespace SessionizeApi.Importer.Models
 {
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
-    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public class Session : ILogFormattable
     {
-        #region API Properties
+        #region Constructor
+
+        private Session(SessionDto oldSessionDto,
+            LoggingService loggingService)
+        {
+            // API Properties
+
+            Id = oldSessionDto.Id;
+            Title = oldSessionDto.Title;
+            Description = oldSessionDto.Description;
+            StartsAt = oldSessionDto.StartsAt;
+            EndsAt = oldSessionDto.EndsAt;
+            IsServiceSession = oldSessionDto.IsServiceSession;
+            IsPlenumSession = oldSessionDto.IsPlenumSession;
+            QuestionAnswers = oldSessionDto.QuestionAnswers
+                .Select(answerDto =>
+                    QuestionAnswer.Create(answerDto,
+                        loggingService))
+                .ToArray();
+            RoomId = oldSessionDto.RoomId;
+            LiveUrl = oldSessionDto.LiveUrl;
+            RecordingUrl = oldSessionDto.RecordingUrl;
+
+            //Reference Properties
+
+            SpeakerIds = oldSessionDto.SpeakerIds
+                .Select(speakerIdGuid => (Id)speakerIdGuid)
+                .ToArray();
+            CategoryIds = oldSessionDto.CategoryIds
+                .Select(categoryIdUint => (Id)categoryIdUint)
+                .ToArray();
+        }
+
+        public static Session Create(SessionDto oldSessionDto,
+            LoggingService loggingService)
+        {
+            try
+            {
+                var session = new Session(oldSessionDto, loggingService);
+
+                return session;
+            }
+            catch (Exception exception)
+            {
+                loggingService.LogExceptionRouter(exception);
+
+                return null;
+            }
+        }
+
+        #endregion
+
+        #region Original and Replacement API Properties
 
         [JsonPropertyName("id")]
         public Id Id { get; set; }
@@ -39,36 +87,39 @@ namespace SessionizeApi.Importer.Models
         [JsonPropertyName("isPlenumSession")]
         public bool IsPlenumSession { get; set; }
 
-        [JsonPropertyName("speakers")]
+        [JsonPropertyName("speakerIds")]
         public Id[] SpeakerIds { get; set; }
 
-        [JsonPropertyName("categoryItems")]
+        [JsonPropertyName("categoryIds")]
         public Id[] CategoryIds { get; set; }
 
-        // TODO Make private?
         [JsonPropertyName("questionAnswers")]
         public QuestionAnswer[] QuestionAnswers { get; set; }
 
-        // TODO Check format when have data
+        [JsonPropertyName("roomId")]
+        internal Id RoomId { get; set; }
+
+        // TODO Check format and decide conversion when have data
         [JsonPropertyName("liveUrl")]
         public string LiveUrl { get; set; }
 
-        // TODO Check format when have data
+        // TODO Check format and decide conversion when have data
         [JsonPropertyName("recordingUrl")]
         public string RecordingUrl { get; set; }
 
         #endregion
 
-        #region Connective Properties
+        #region Reference Properties
 
-        [JsonPropertyName("categoryIdsAndNames ")]
-        public IEnumerable<IdAndName> CategoryIdsAndNames { get; private set; }
+        [JsonPropertyName("speakerReferences")]
+        public IEnumerable<Item> SpeakerReferences { get; private set; }
 
-        [JsonPropertyName("speakerIdsAndNames")]
-        public IEnumerable<IdAndName> SpeakerIdsAndNames { get; private set; }
+        [JsonPropertyName("categoryReferences ")]
+        public IEnumerable<Item> CategoryReferences { get; private set; }
 
         // TODO
-        //public IEnumerable<IdAndFieldAndValue> QuestionsIdsAndAnswers { get; private set; }
+        [JsonPropertyName("questionReferences")]
+        public IEnumerable<Item> QuestionsReferences { get; private set; }
 
         #endregion
 
@@ -83,7 +134,8 @@ namespace SessionizeApi.Importer.Models
         [JsonIgnore]
         public string LogDisplayLong { get; private set; }
 
-         [JsonIgnore]
+        // Used in Trello exporter also
+        [JsonIgnore]
         public string SpeakerNames { get; private set; }
 
         #endregion
@@ -92,39 +144,38 @@ namespace SessionizeApi.Importer.Models
 
         // TODO Convert dictionary arguments to refs? [Affects LINQ expression]
         // TODO Pass QuestionDictionary
-        internal void FormatDependentFields(
+        internal void FormatReferenceFields(
             IDictionary<Id, Speaker> speakerDictionary,
-            IDictionary<Id, Item> categoryDictionary)
+            IDictionary<Id, Item> categoryDictionary,
+            LoggingService loggingService)
         {
-            var speakerIdsAndNames =
-                SpeakerIds
-                    .Select(id =>
-                        new IdAndName
-                        {
-                            Id = id,
-                            Name = speakerDictionary[id].FullName
-                        })
-                    .OrderBy(speaker => speaker.Name)
-                    .ToList();
-            SpeakerIdsAndNames = speakerIdsAndNames;
+            var speakerReferences = SpeakerIds
+                // Dereference Speaker Id to get Full Name
+                .Select(id =>
+                    (id, speakerDictionary[id].FullName))
+                // Sort alphabetically by Speaker's Full Name
+                .OrderBy(idAndName =>
+                    idAndName.FullName)
+                // Project into Item in same alphabetical order
+                .Select((idAndName, index) =>
+                    Item.Create(idAndName.id, idAndName.FullName, (uint)index,
+                        loggingService))
+                .ToList();
+            SpeakerReferences = speakerReferences;
 
-            var categoryIdsAndNames =
-                CategoryIds
-                    .Select(id =>
-                        new IdAndName
-                        {
-                            Id = id,
-                            Name = categoryDictionary[id].Name
-                        })
-                    .OrderBy(category => category.Name)
-                    .ToList();
-            CategoryIdsAndNames = categoryIdsAndNames;
+            var categoryReferences = CategoryIds
+                // Categories are already Items => Pull directly from dictionary
+                .Select(id => categoryDictionary[id])
+                // Sort by Category name in case added out of alphabetical order
+                .OrderBy(category => category.Name)
+                .ToList();
+            CategoryReferences = categoryReferences;
 
-            // TODO Merge QuestionsIdsAndAnswers from question dictionary and answers
+            // TODO Pull Question Ids and Names from dictionary => Item list
 
             SpeakerNames =
                 string.Join(", ",
-                    SpeakerIdsAndNames.Select(tuple => tuple.Name));
+                    SpeakerReferences.Select(item => item.Name));
 
             var idStr = IsServiceSession ? "SERVICE" : Id.ToString();
 
@@ -132,19 +183,19 @@ namespace SessionizeApi.Importer.Models
                 $"{idStr} - Speakers: {SpeakerNames} - {Title}";
 
             LogDisplayShort =
-                $"{idStr,-10} - Speakers: {SpeakerNames,-40} - {Title}";
+                $"{idStr,-7} - Speakers: {SpeakerNames,-30} - {Title}";
 
             LogDisplayLong = $"{idStr,-10} - {Title}";
             LogDisplayLong =
-                CategoryIdsAndNames.Aggregate(LogDisplayLong,
-                    (current, idAndName) =>
+                CategoryReferences.Aggregate(LogDisplayLong,
+                    (current, item) =>
                         current
-                        + $"{NewLine}{Indent}Category {idAndName.Id}: {idAndName.Name}");
+                        + $"{NewLine}{Indent}Category {item.Id}: {item.Name}");
             LogDisplayLong =
-                SpeakerIdsAndNames.Aggregate(LogDisplayLong,
-                    (current, idAndName) =>
+                SpeakerReferences.Aggregate(LogDisplayLong,
+                    (current, item) =>
                         current
-                        + $"{NewLine}{Indent}Speaker {idAndName.Id}: {idAndName.Name}");
+                        + $"{NewLine}{Indent}Speaker {item.Id}: {item.Name}");
         }
 
         #endregion

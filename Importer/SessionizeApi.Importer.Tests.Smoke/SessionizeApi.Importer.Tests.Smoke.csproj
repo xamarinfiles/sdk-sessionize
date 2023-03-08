@@ -11,4 +11,6 @@
     <ProjectReference Include="..\SessionizeApi.Importer\SessionizeApi.Importer.csproj" />
   </ItemGroup>
 
+  <Import Project="..\..\SessionizeApi.Shared\SessionizeApi.Shared.projitems" Label="Shared" />
+
 </Project>

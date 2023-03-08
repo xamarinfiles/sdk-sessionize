@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -174,10 +174,13 @@ namespace SessionizeApi.Importer.Logger
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public void LogInfo(string format, params object[] args)
         {
-            var message = $"INFORMATION:  {string.Format(format, args)}";
+            var message = $"INFORMATION: {string.Format(format, args)}";
 
             _logger.LogInformation("{message}", message);
         }
+
+        //[Conditional("DEBUG")]
+        //public void LogList<T>(IList<T> list) :-
 
         [Conditional("DEBUG")]
         public void LogObjectAsJson<T>(object obj,

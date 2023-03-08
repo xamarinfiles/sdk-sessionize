@@ -9,12 +9,9 @@ using System.Threading.Tasks;
 namespace SessionizeApi.Importer
 {
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
-    public class SessionizeImporter
+    public class EventImporter
     {
         #region Fields
-
-        public const string SessionizeUrlFormat =
-            "https://sessionize.com/api/v2/{0}/view/All";
 
         // Instantiate once per application, rather than per-use. See Remarks in Doc.
         private static readonly HttpClient HttpClient = new();
@@ -26,14 +23,14 @@ namespace SessionizeApi.Importer
 
         #region Constructor
 
-        public SessionizeImporter(LoggingService loggingService)
+        public EventImporter(LoggingService loggingService)
         {
             LoggingService = loggingService;
         }
 
         #endregion
 
-        #region Services
+        #region Service Properies
 
         private LoggingService LoggingService { get; }
 
@@ -46,23 +43,14 @@ namespace SessionizeApi.Importer
             if (string.IsNullOrWhiteSpace(jsonFilename))
                 return LogImportError(jsonFilename);
 
-            //LoggingService.LogValue("Event File", jsonFilename);
+            LoggingService.LogValue("Event File", jsonFilename);
 
-            try
-            {
-                var allDataJson = GetTextFromFile(jsonFilename);
+            var allDataJson = GetTextFromFile(jsonFilename);
 
-                var @event = ImportAllDataFromJson(allDataJson,
-                    jsonFilename);
+            var @event = ImportAllDataFromJson(allDataJson,
+                jsonFilename);
 
-                return @event;
-            }
-            catch (Exception exception)
-            {
-                LoggingService.LogExceptionRouter(exception);
-
-                return LogImportError(jsonFilename);
-            }
+            return @event;
         }
 
         public async Task<Event> ImportAllDataFromUri(Uri jsonUri)
@@ -70,43 +58,25 @@ namespace SessionizeApi.Importer
             if (jsonUri == null)
                 return LogImportError(null);
 
-            //LoggingService.LogValue("Event URL", jsonUri.ToString());
+            var allDataJson = await GetTextFromUrl(jsonUri);
 
-            try
-            {
-                var allDataJson = await GetTextFromUrl(jsonUri);
+            var @event = ImportAllDataFromJson(allDataJson,
+                jsonUri.AbsoluteUri);
 
-                var @event = ImportAllDataFromJson(allDataJson,
-                    jsonUri.AbsoluteUri);
-
-                return @event;
-            }
-            catch (Exception exception)
-            {
-                LoggingService.LogExceptionRouter(exception);
-
-                return LogImportError(jsonUri.OriginalString);
-            }
+            return @event;
         }
 
-        private Event ImportAllDataFromJson(string allDataJson,
-            string eventSource = null)
+        private Event ImportAllDataFromJson(string allDataJson, string eventSource)
         {
             try
             {
                 if (string.IsNullOrWhiteSpace(allDataJson))
                     return LogImportError(eventSource);
 
-                var allData =
-                    AllData.FromJson(allDataJson, LoggingService, eventSource);
+                var @event = Event.Create(allDataJson, LoggingService, eventSource);
 
-                if (allData == null)
-                    return LogImportError(eventSource);
-
-                LoggingService.LogObjectAsJson<AllData>(allData,
+                LoggingService.LogObjectAsJson<Event>(@event,
                     SkipOnSuccess);
-
-                var @event = Event.Create(allData);
 
                 return @event ?? LogImportError(eventSource);
             }
