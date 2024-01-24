@@ -61,6 +61,7 @@ Global
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		SessionizeApi.Shared\SessionizeApi.Shared.projitems*{9e53516d-746b-4103-a1c7-a0c939a3b74d}*SharedItemsImports = 5
+		..\library-fancy-logger-extensions\FancyLogger.Extensions\FancyLogger.Extensions.projitems*{9e53516d-746b-4103-a1c7-a0c939a3b74d}*SharedItemsImports = 5
 		SessionizeApi.Shared\SessionizeApi.Shared.projitems*{b5cc1a66-2247-462e-8f5a-fb6165911b9d}*SharedItemsImports = 5
 		SessionizeApi.Shared\SessionizeApi.Shared.projitems*{c903c6ab-8159-4561-80a6-3ab80924889c}*SharedItemsImports = 5
 		SessionizeApi.Shared\SessionizeApi.Shared.projitems*{f9aa0b9c-962c-48fa-ae57-569a0975daa7}*SharedItemsImports = 13

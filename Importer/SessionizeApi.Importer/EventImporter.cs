@@ -1,10 +1,10 @@
-﻿using SessionizeApi.Importer.Logger;
-using SessionizeApi.Importer.Models;
+﻿using SessionizeApi.Importer.Models;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using XamarinFiles.FancyLogger;
 
 namespace SessionizeApi.Importer
 {
@@ -23,16 +23,16 @@ namespace SessionizeApi.Importer
 
         #region Constructor
 
-        public EventImporter(LoggingService loggingService)
+        public EventImporter(IFancyLogger fancyLogger)
         {
-            LoggingService = loggingService;
+            FancyLogger = fancyLogger;
         }
 
         #endregion
 
         #region Service Properies
 
-        private LoggingService LoggingService { get; }
+        private IFancyLogger FancyLogger { get; }
 
         #endregion
 
@@ -43,7 +43,7 @@ namespace SessionizeApi.Importer
             if (string.IsNullOrWhiteSpace(jsonFilename))
                 return LogImportError(jsonFilename);
 
-            LoggingService.LogValue("Event File", jsonFilename);
+            FancyLogger.LogScalar("Event File", jsonFilename);
 
             var allDataJson = GetTextFromFile(jsonFilename);
 
@@ -73,16 +73,16 @@ namespace SessionizeApi.Importer
                 if (string.IsNullOrWhiteSpace(allDataJson))
                     return LogImportError(eventSource);
 
-                var @event = Event.Create(allDataJson, LoggingService, eventSource);
+                var @event = Event.Create(allDataJson, FancyLogger, eventSource);
 
-                LoggingService.LogObjectAsJson<Event>(@event,
+                FancyLogger.LogObject<Event>(@event,
                     SkipOnSuccess);
 
                 return @event ?? LogImportError(eventSource);
             }
             catch (Exception exception)
             {
-                LoggingService.LogExceptionRouter(exception);
+                FancyLogger.LogException(exception);
 
                 return LogImportError(eventSource);
             }
@@ -90,7 +90,7 @@ namespace SessionizeApi.Importer
 
         private Event LogImportError(string eventSource)
         {
-            LoggingService.LogError(
+            FancyLogger.LogError(
                 $"Unable to import data from '{(eventSource ?? "NULL")}'");
 
             return null;
@@ -111,7 +111,7 @@ namespace SessionizeApi.Importer
             }
             catch (Exception exception)
             {
-                LoggingService.LogExceptionRouter(exception);
+                FancyLogger.LogException(exception);
 
                 return null;
             }
@@ -127,7 +127,7 @@ namespace SessionizeApi.Importer
             }
             catch (Exception exception)
             {
-                LoggingService.LogExceptionRouter(exception);
+                FancyLogger.LogException(exception);
 
                 return null;
             }

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json.Serialization;
+using XamarinFiles.FancyLogger;
 
 namespace SessionizeApi.Importer.Models
 {
@@ -22,30 +23,30 @@ namespace SessionizeApi.Importer.Models
         #region Constructor
 
         private Category(CategoryDto categoryDto,
-            LoggingService loggingService)
+            IFancyLogger fancyLogger)
         {
             Id = categoryDto.Id;
             Title = categoryDto.Title;
             Items = categoryDto.Items
                 .Select(itemDto => Item.Create(itemDto,
-                    loggingService))
+                    fancyLogger))
                 .ToArray();
             Sort = categoryDto.Sort;
             Type = categoryDto.Type;
         }
 
         public static Category Create(CategoryDto categoryDto,
-            LoggingService loggingService)
+            IFancyLogger fancyLogger)
         {
             try
             {
-                var category = new Category(categoryDto, loggingService);
+                var category = new Category(categoryDto, fancyLogger);
 
                 return category;
             }
             catch (Exception exception)
             {
-                loggingService.LogExceptionRouter(exception);
+                fancyLogger.LogException(exception);
 
                 return null;
             }

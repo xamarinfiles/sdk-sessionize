@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.Json.Serialization;
+using XamarinFiles.FancyLogger;
 using static SessionizeApi.Importer.Constants.Characters;
 
 namespace SessionizeApi.Importer.Models
@@ -14,7 +15,7 @@ namespace SessionizeApi.Importer.Models
     {
         #region Constructor
 
-        private Speaker(SpeakerDto oldSpeakerDto, LoggingService loggingService)
+        private Speaker(SpeakerDto oldSpeakerDto, IFancyLogger fancyLogger)
         {
             // API Properties
 
@@ -26,13 +27,13 @@ namespace SessionizeApi.Importer.Models
             ProfilePicture = oldSpeakerDto.ProfilePicture;
             Links = oldSpeakerDto.Links
                 .Select(linkDto =>
-                    Link.Create(linkDto, loggingService))
+                    Link.Create(linkDto, fancyLogger))
                 .ToArray();
             FullName = oldSpeakerDto.FullName;
             QuestionAnswers = oldSpeakerDto.QuestionAnswers
                 .Select(answerDto =>
                     QuestionAnswer.Create(answerDto,
-                        loggingService))
+                        fancyLogger))
                 .ToArray();
 
 
@@ -46,17 +47,17 @@ namespace SessionizeApi.Importer.Models
         }
 
         public static Speaker Create(SpeakerDto oldSpeakerDto,
-            LoggingService loggingService)
+            IFancyLogger fancyLogger)
         {
             try
             {
-                var speaker = new Speaker(oldSpeakerDto, loggingService);
+                var speaker = new Speaker(oldSpeakerDto, fancyLogger);
 
                 return speaker;
             }
             catch (Exception exception)
             {
-                loggingService.LogExceptionRouter(exception);
+                fancyLogger.LogException(exception);
 
                 return null;
             }
@@ -139,7 +140,7 @@ namespace SessionizeApi.Importer.Models
         internal void FormatReferenceFields(
             IDictionary<Id, Session> sessionDictionary,
             IDictionary<Id, Item> categoryDictionary,
-            LoggingService loggingService)
+            IFancyLogger fancyLogger)
         {
             var sessionReferences = SessionIds
                 // Dereference Session Id to get Title
@@ -151,7 +152,7 @@ namespace SessionizeApi.Importer.Models
                 // Project into Item in same alphabetical order
                 .Select((idAndName, index) =>
                     Item.Create(idAndName.id, idAndName.Title, (uint)index,
-                        loggingService))
+                        fancyLogger))
                 .ToList();
             SessionReferences = sessionReferences;
 

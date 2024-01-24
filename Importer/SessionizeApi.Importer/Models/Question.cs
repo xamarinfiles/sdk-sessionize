@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using SessionizeApi.Importer.Dtos;
+using XamarinFiles.FancyLogger;
 
 namespace SessionizeApi.Importer.Models
 {
@@ -29,7 +30,7 @@ namespace SessionizeApi.Importer.Models
         }
 
         public static Question Create(QuestionDto questionDto,
-            LoggingService loggingService)
+            IFancyLogger fancyLogger)
         {
             try
             {
@@ -39,7 +40,7 @@ namespace SessionizeApi.Importer.Models
             }
             catch (Exception exception)
             {
-                loggingService.LogExceptionRouter(exception);
+                fancyLogger.LogException(exception);
 
                 return null;
             }

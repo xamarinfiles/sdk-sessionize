@@ -1,4 +1,7 @@
-﻿using SessionizeApi.Importer.Logger;
+using System.Diagnostics;
+using SessionizeApi.Importer.Logger;
+using XamarinFiles.FancyLogger;
+using XamarinFiles.FancyLogger.Extensions;
 using static SessionizeApi.Shared.EventIds;
 using static SessionizeApi.Shared.EventTester;
 
@@ -8,13 +11,16 @@ namespace SessionizeApi.Importer.Tests.Smoke
     {
         #region Fields
 
+        //private const string EventId = SessionizeSampleId;
         private const string EventId = SessionizeSampleId;
 
         #endregion
 
         #region Services
 
-        private static LoggingService LoggingService { get; }
+        private static FancyLogger? FancyLogger { get; }
+
+        private static AssemblyLoggerService? AssemblyLoggerService { get; }
 
         private static EventImporter EventImporterService { get; }
 
@@ -26,9 +32,25 @@ namespace SessionizeApi.Importer.Tests.Smoke
 
         static Program()
         {
-            LoggingService = new LoggingService();
-            EventImporterService = new EventImporter(LoggingService);
-            EventPrinterService = new EventPrinter(LoggingService);
+            try
+            {
+                FancyLogger = new FancyLogger();
+
+                EventImporterService = new EventImporter(FancyLogger);
+                EventPrinterService = new EventPrinter(FancyLogger);
+            }
+            catch (Exception exception)
+            {
+                if (FancyLogger is not null)
+                {
+                    FancyLogger.LogException(exception);
+                }
+                else
+                {
+                    Debug.WriteLine("ERROR: Problem setting up logging services");
+                    Debug.WriteLine(exception);
+                }
+            }
         }
 
         #endregion

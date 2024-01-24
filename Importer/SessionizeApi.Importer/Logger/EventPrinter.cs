@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using XamarinFiles.FancyLogger;
 
 namespace SessionizeApi.Importer.Logger
 {
@@ -11,16 +12,16 @@ namespace SessionizeApi.Importer.Logger
     {
         #region Constructor
 
-        public EventPrinter(LoggingService loggingService)
+        public EventPrinter(IFancyLogger fancyLogger)
         {
-            LoggingService = loggingService;
+            FancyLogger = fancyLogger;
         }
 
         #endregion
 
         #region Services
 
-        private LoggingService LoggingService { get; }
+        private IFancyLogger FancyLogger { get; }
 
         #endregion
 
@@ -39,7 +40,7 @@ namespace SessionizeApi.Importer.Logger
                     ? "All Data"
                     : @event.DebuggerDisplay;
 
-                LoggingService.LogHeader(header);
+                FancyLogger.LogHeader(header);
 
                 PrintArray(@event.Speakers, "Speakers");
                 PrintArray(@event.Sessions, "Sessions");
@@ -49,7 +50,7 @@ namespace SessionizeApi.Importer.Logger
             }
             catch (Exception exception)
             {
-                LoggingService.LogExceptionRouter(exception);
+                FancyLogger.LogException(exception);
             }
         }
 
@@ -63,21 +64,21 @@ namespace SessionizeApi.Importer.Logger
 
             try
             {
-                LoggingService.LogHeader($"{array.Count} {label}");
+                FancyLogger.LogHeader($"{array.Count} {label}");
 
                 for (var index = 0; index < array.Count; index++)
                 {
                     ILogFormattable obj = array[index];
 
-                    LoggingService.LogSubheader("{0}: {1}",
-                        index + 1, obj.LogDisplayLong);
+                    FancyLogger.LogInfo("{0}: {1}", addIndent: true,
+                        newLineAfter:true, index + 1, obj.LogDisplayLong);
 
-                    LoggingService.LogObjectAsJson<T>(obj);
+                    FancyLogger.LogObject<T>(obj);
                 }
             }
             catch (Exception exception)
             {
-                LoggingService.LogExceptionRouter(exception);
+                FancyLogger.LogException(exception);
             }
         }
 
