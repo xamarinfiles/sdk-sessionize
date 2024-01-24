@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using SessionizeApi.Importer.Logger;
 using XamarinFiles.FancyLogger;
-using XamarinFiles.FancyLogger.Extensions;
 using static SessionizeApi.Importer.Serialization.Configurations;
 using static SessionizeApi.Shared.EventIds;
 using static SessionizeApi.Shared.EventTester;
@@ -21,7 +20,7 @@ namespace SessionizeApi.Importer.Tests.Smoke
 
         private static FancyLogger? FancyLogger { get; }
 
-        private static AssemblyLoggerService? AssemblyLoggerService { get; }
+        //private static AssemblyLogger? AssemblyLogger { get; }
 
         private static EventImporter EventImporterService { get; }
 
@@ -39,6 +38,7 @@ namespace SessionizeApi.Importer.Tests.Smoke
                 var writeJsonOptions = GetDebugJsonOptions(true);
 
                 FancyLogger = new FancyLogger(writeJsonOptions: writeJsonOptions);
+                //AssemblyLogger = new AssemblyLogger(FancyLogger);
 
                 EventImporterService = new EventImporter(FancyLogger);
                 EventPrinterService = new EventPrinter(FancyLogger);
