@@ -41,7 +41,7 @@ namespace SessionizeApi.Importer.Dtos
         public QuestionAnswerDto[] QuestionAnswers { get; set; }
 
         [JsonPropertyName("roomId")]
-        public uint RoomId { get; set; }
+        public uint? RoomId { get; set; }
 
         // TODO Check format and decide conversion when have data
         [JsonPropertyName("liveUrl")]

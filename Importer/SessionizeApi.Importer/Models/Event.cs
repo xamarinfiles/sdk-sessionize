@@ -1,4 +1,4 @@
-using SessionizeApi.Importer.Dtos;
+﻿using SessionizeApi.Importer.Dtos;
 using SessionizeApi.Importer.Logger;
 using System;
 using System.Collections.Generic;
@@ -19,6 +19,9 @@ namespace SessionizeApi.Importer.Models
         private Event(AllDataDto allDataDto, IFancyLogger fancyLogger,
             string eventSource)
         {
+            if (allDataDto == null)
+                return;
+
             Sessions = allDataDto.Sessions
                 .Select(sessionDto =>
                     Session.Create(sessionDto, fancyLogger))

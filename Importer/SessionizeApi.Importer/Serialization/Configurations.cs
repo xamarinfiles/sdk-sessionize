@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace SessionizeApi.Importer.Serialization
 {
-    internal static class Configurations
+    public static class Configurations
     {
         #region JSON Serialization
 
@@ -18,7 +18,7 @@ namespace SessionizeApi.Importer.Serialization
             DebugJsonOptionsWithNull = new()
             {
                 DefaultIgnoreCondition = JsonIgnoreCondition.Never,
-                //Converters = { new IdConverter() },
+                Converters = { new IdConverter() },
                 WriteIndented = true
             };
 
@@ -26,7 +26,7 @@ namespace SessionizeApi.Importer.Serialization
             DebugJsonOptionsWithoutNull = new()
             {
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                //Converters = { new IdConverter() },
+                Converters = { new IdConverter() },
                 WriteIndented = true
             };
 
@@ -34,7 +34,7 @@ namespace SessionizeApi.Importer.Serialization
             ParseJsonOptions = new()
             {
                 AllowTrailingCommas = true,
-                //Converters = { new IdConverter() },
+                Converters = { new IdConverter() },
                 NumberHandling = JsonNumberHandling.AllowReadingFromString,
                 PropertyNameCaseInsensitive = true
             };

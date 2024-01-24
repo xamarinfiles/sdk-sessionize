@@ -1,4 +1,4 @@
-using SessionizeApi.Importer.Dtos;
+﻿using SessionizeApi.Importer.Dtos;
 using SessionizeApi.Importer.Logger;
 using System;
 using System.Collections.Generic;
@@ -18,32 +18,39 @@ namespace SessionizeApi.Importer.Models
         private Session(SessionDto oldSessionDto,
             IFancyLogger fancyLogger)
         {
-            // API Properties
+            try
+            {
+                // API Properties
 
-            Id = oldSessionDto.Id;
-            Title = oldSessionDto.Title;
-            Description = oldSessionDto.Description;
-            StartsAt = oldSessionDto.StartsAt;
-            EndsAt = oldSessionDto.EndsAt;
-            IsServiceSession = oldSessionDto.IsServiceSession;
-            IsPlenumSession = oldSessionDto.IsPlenumSession;
-            QuestionAnswers = oldSessionDto.QuestionAnswers
-                .Select(answerDto =>
-                    QuestionAnswer.Create(answerDto,
-                        fancyLogger))
-                .ToArray();
-            RoomId = oldSessionDto.RoomId;
-            LiveUrl = oldSessionDto.LiveUrl;
-            RecordingUrl = oldSessionDto.RecordingUrl;
+                Id = oldSessionDto.Id;
+                Title = oldSessionDto.Title;
+                Description = oldSessionDto.Description;
+                StartsAt = oldSessionDto.StartsAt;
+                EndsAt = oldSessionDto.EndsAt;
+                IsServiceSession = oldSessionDto.IsServiceSession;
+                IsPlenumSession = oldSessionDto.IsPlenumSession;
+                QuestionAnswers = oldSessionDto.QuestionAnswers
+                    .Select(answerDto =>
+                        QuestionAnswer.Create(answerDto,
+                            fancyLogger))
+                    .ToArray();
+                RoomId = oldSessionDto.RoomId;
+                LiveUrl = oldSessionDto.LiveUrl;
+                RecordingUrl = oldSessionDto.RecordingUrl;
 
-            //Reference Properties
+                //Reference Properties
 
-            SpeakerIds = oldSessionDto.SpeakerIds
-                .Select(speakerIdGuid => (Id)speakerIdGuid)
-                .ToArray();
-            CategoryIds = oldSessionDto.CategoryIds
-                .Select(categoryIdUint => (Id)categoryIdUint)
-                .ToArray();
+                SpeakerIds = oldSessionDto.SpeakerIds
+                    .Select(speakerIdGuid => (Id)speakerIdGuid)
+                    .ToArray();
+                CategoryIds = oldSessionDto.CategoryIds
+                    .Select(categoryIdUint => (Id)categoryIdUint)
+                    .ToArray();
+            }
+            catch (Exception exception)
+            {
+                fancyLogger.LogException(exception);
+            }
         }
 
         public static Session Create(SessionDto oldSessionDto,
@@ -52,6 +59,10 @@ namespace SessionizeApi.Importer.Models
             try
             {
                 var session = new Session(oldSessionDto, fancyLogger);
+
+                // TEMP
+                fancyLogger.LogObject<Session>(session);
+                fancyLogger.LogScalar($"Session {session.Id.Guid}", session.ToString());
 
                 return session;
             }
@@ -98,7 +109,7 @@ namespace SessionizeApi.Importer.Models
         public QuestionAnswer[] QuestionAnswers { get; set; }
 
         [JsonPropertyName("roomId")]
-        internal Id RoomId { get; set; }
+        internal Id? RoomId { get; set; }
 
         // TODO Check format and decide conversion when have data
         [JsonPropertyName("liveUrl")]
