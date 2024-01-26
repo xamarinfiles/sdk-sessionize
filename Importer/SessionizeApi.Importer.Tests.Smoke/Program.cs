@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using SessionizeApi.Importer.Logger;
 using XamarinFiles.FancyLogger;
 using static SessionizeApi.Importer.Serialization.Configurations;
@@ -9,10 +9,12 @@ namespace SessionizeApi.Importer.Tests.Smoke
 {
     internal static class Program
     {
-        #region Fields
+        // TODO Move to config files
+        #region Sessionize Fields
 
         //private const string EventId = SessionizeSampleId;
-        private const string EventId = SessionizeSampleId;
+        //private const string EventId = OrlandoCodeCamp2023Id;
+        private const string EventId = OrlandoCodeCamp2024Id;
 
         #endregion
 
@@ -22,9 +24,9 @@ namespace SessionizeApi.Importer.Tests.Smoke
 
         //private static AssemblyLogger? AssemblyLogger { get; }
 
-        private static EventImporter EventImporterService { get; }
+        private static EventImporter EventImporter { get; }
 
-        private static EventPrinter EventPrinterService { get; }
+        private static EventPrinter EventPrinter { get; }
 
         #endregion
 
@@ -40,8 +42,8 @@ namespace SessionizeApi.Importer.Tests.Smoke
                 FancyLogger = new FancyLogger(writeJsonOptions: writeJsonOptions);
                 //AssemblyLogger = new AssemblyLogger(FancyLogger);
 
-                EventImporterService = new EventImporter(FancyLogger);
-                EventPrinterService = new EventPrinter(FancyLogger);
+                EventImporter = new EventImporter(FancyLogger);
+                EventPrinter = new EventPrinter(FancyLogger);
             }
             catch (Exception exception)
             {
@@ -63,8 +65,7 @@ namespace SessionizeApi.Importer.Tests.Smoke
 
         internal static void Main()
         {
-            LoadEventFromUrlAndPrint(EventId, EventImporterService,
-                EventPrinterService);
+            LoadEventFromUrlAndPrint(EventId, EventImporter, EventPrinter);
         }
 
         #endregion

@@ -1,9 +1,13 @@
-﻿using SessionizeApi.Importer;
+using SessionizeApi.Importer;
 using SessionizeApi.Importer.Logger;
 using SessionizeApi.Importer.Models;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using static SessionizeApi.Importer.SessionizeImporter;
-#pragma warning disable IDE0051
+using XamarinFiles.FancyLogger;
+//#pragma warning disable IDE0051
+using static SessionizeApi.Importer.Serialization.Configurations;
+using static SessionizeApi.Shared.EventIds;
+using static SessionizeApi.Shared.EventTester;
 
 namespace SessionizeApi.Trello.Tests.Smoke
 {
@@ -11,12 +15,12 @@ namespace SessionizeApi.Trello.Tests.Smoke
     [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Local")]
     internal static class Program
     {
-        // TODO Centralize these
+        // TODO Move to config files
         #region Sessionize Fields
 
-        private const string SessionizeSampleId = "** TODO **";
-
-        private const string Occ2023Id = "** TODO **";
+        //private const string EventId = SessionizeSampleId;
+        //private const string EventId = OrlandoCodeCamp2023Id;
+        private const string EventId = OrlandoCodeCamp2024Id;
 
         #endregion
 
@@ -34,17 +38,55 @@ namespace SessionizeApi.Trello.Tests.Smoke
 
         #region Services
 
-        //private static CsvExporter CsvExporter { get; set; }
+        private static EventImporter? EventImporter { get; }
 
-        private static LoggingService LoggingService { get; } = new();
+        private static EventPrinter? EventPrinter { get; }
 
-        private static SessionizeImporter SessionizeImporter { get; } =
-            new(LoggingService);
+        private static FancyLogger? FancyLogger { get; }
 
-        private static SessionizeLogger SessionizeLogger { get; } = new(LoggingService);
+        private static TrelloExporter? TrelloExporter { get; }
 
-        private static TrelloExporter TrelloExporter { get; set; } =
-            new(LoggingService, TrelloApiKey, TrelloApiToken);
+        #endregion
+
+        #region User Secrets
+
+        // TODO
+        //private static IConfigurationRoot Configuration;
+        //private const string _trelloApiKeySecretName = "TrelloApiKey";
+        //private const string _trelloApiTokenSecretName = "TrelloApiToken";
+        //private const string _trelloBoardIdSecretName = "TrelloBoardId";
+
+        #endregion
+
+        #region Constructor
+
+        static Program()
+        {
+            try
+            {
+                // TODO Centralize?
+                var writeJsonOptions = GetDebugJsonOptions(true);
+
+                FancyLogger = new FancyLogger(writeJsonOptions: writeJsonOptions);
+                EventImporter = new EventImporter(FancyLogger);
+                EventPrinter = new EventPrinter(FancyLogger);
+                TrelloExporter = new TrelloExporter(FancyLogger,
+                    // TODO
+                    TrelloApiKey, TrelloApiToken);
+            }
+            catch (Exception exception)
+            {
+                if (FancyLogger is not null)
+                {
+                    FancyLogger.LogException(exception);
+                }
+                else
+                {
+                    Debug.WriteLine("ERROR: Problem setting up logging services");
+                    Debug.WriteLine(exception);
+                }
+            }
+        }
 
         #endregion
 
@@ -54,9 +96,7 @@ namespace SessionizeApi.Trello.Tests.Smoke
         {
             try
             {
-                var @event = LoadAndPrintEventFromUrl(SessionizeSampleId);
-
-                // var @event = LoadAndPrintEventFromUrl(Occ2023Id);
+                var @event = LoadAndPrintEventFromUrl(EventId);
 
                 if (@event is null)
                     return;
@@ -65,7 +105,7 @@ namespace SessionizeApi.Trello.Tests.Smoke
             }
             catch (Exception exception)
             {
-                LoggingService.LogExceptionRouter(exception);
+                FancyLogger?.LogException(exception);
             }
         }
 
@@ -77,11 +117,14 @@ namespace SessionizeApi.Trello.Tests.Smoke
         {
             try
             {
+                if (TrelloExporter is null)
+                    return;
+
                 await TrelloExporter.ConnectToTrelloAndLoadBoard(@event, boardId);
             }
             catch (Exception exception)
             {
-                LoggingService.LogExceptionRouter(exception);
+                FancyLogger?.LogException(exception);
             }
         }
 
@@ -96,10 +139,10 @@ namespace SessionizeApi.Trello.Tests.Smoke
         {
             var webUrl = PopulateUrl(eventId);
             var webEvent =
-                Task.Run(() => SessionizeImporter.ImportAllDataFromUri(webUrl))
+                Task.Run(() => EventImporter?.ImportAllDataFromUri(webUrl))
                     .GetAwaiter().GetResult();
 
-            SessionizeLogger.PrintEvent(webEvent);
+            EventPrinter?.PrintEvent(webEvent);
 
             return webEvent;
         }

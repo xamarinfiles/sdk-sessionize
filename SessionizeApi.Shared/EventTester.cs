@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SessionizeApi.Shared
 {
-    internal static class EventTester
+    public static class EventTester
     {
         #region Fields
 
@@ -17,7 +17,7 @@ namespace SessionizeApi.Shared
 
         #region Methods
 
-        internal static Event? LoadEventFromFileAndPrint(string filename,
+        public static Event? LoadEventFromFileAndPrint(string filename,
             EventImporter importerService, EventPrinter printerService,
             bool printEvent = true)
         {
@@ -31,7 +31,7 @@ namespace SessionizeApi.Shared
             return fileEvent;
         }
 
-        internal static Event? LoadEventFromUrlAndPrint(string eventId,
+        public static Event? LoadEventFromUrlAndPrint(string eventId,
             EventImporter importerService, EventPrinter printerService,
             bool printEvent = true)
         {
@@ -46,7 +46,7 @@ namespace SessionizeApi.Shared
             return webEvent;
         }
 
-        private static Uri PopulateUrl(string eventId,
+        public static Uri PopulateUrl(string eventId,
             string urlFormat = SessionizeUrlFormat)
         {
             var sessionizeUrlStr = string.Format(urlFormat, eventId);

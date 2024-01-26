@@ -29,7 +29,7 @@ namespace SessionizeApi.Importer.Logger
 
         [Conditional("DEBUG")]
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
-        public void PrintEvent(Event @event, bool printEvent)
+        public void PrintEvent(Event @event, bool printEvent = true)
         {
             if (@event == null || printEvent == false)
                 return;

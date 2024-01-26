@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
@@ -22,6 +22,11 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SessionizeApi.Csv", "Promotion\SessionizeApi.Csv\SessionizeApi.Csv.csproj", "{6DF0F9F3-497D-489E-8772-DDD2A6D4101B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SessionizeApi.Csv.Run", "Promotion\SessionizeApi.Csv.Run\SessionizeApi.Csv.Run.csproj", "{B5CC1A66-2247-462E-8F5A-FB6165911B9D}"
+EndProject
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SessionizeApi.Trello", "Schedule\SessionizeApi.Trello\SessionizeApi.Trello.csproj", "{0F1989DC-8A8B-4FE7-9701-D10308B77A4E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SessionizeApi.Trello.Tests.Smoke", "Schedule\SessionizeApi.Trello.Tests.Smoke\SessionizeApi.Trello.Tests.Smoke.csproj", "{36B4057B-F382-4764-87EA-CAB1FC647B3E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
