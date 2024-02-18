@@ -37,6 +37,9 @@ namespace SessionizeApi.Importer.Models
                 RoomId = oldSessionDto.RoomId;
                 LiveUrl = oldSessionDto.LiveUrl;
                 RecordingUrl = oldSessionDto.RecordingUrl;
+                Status = oldSessionDto.Status;
+                IsInformed = oldSessionDto.IsInformed;
+                IsConfirmed = oldSessionDto.IsConfirmed;
 
                 //Reference Properties
 
@@ -119,6 +122,15 @@ namespace SessionizeApi.Importer.Models
         [JsonPropertyName("recordingUrl")]
         public string RecordingUrl { get; set; }
 
+        [JsonPropertyName("status")]
+        public string Status { get; set; }
+
+        [JsonPropertyName("isInformed")]
+        public bool IsInformed { get; set; }
+
+        [JsonPropertyName("isConfirmed")]
+        public bool IsConfirmed { get; set; }
+
         #endregion
 
         #region Reference Properties
@@ -177,6 +189,7 @@ namespace SessionizeApi.Importer.Models
 
             var choiceReferences = ChoiceIds
                 // Choices are already Items => Pull directly from dictionary
+                .Where(choiceDictionary.ContainsKey)
                 .Select(id => choiceDictionary[id])
                 // Sort by Choice name in case added out of alphabetical order
                 .OrderBy(choice => choice.Name)

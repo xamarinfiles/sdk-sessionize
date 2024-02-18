@@ -51,6 +51,15 @@ namespace SessionizeApi.Importer.Dtos
         [JsonPropertyName("recordingUrl")]
         public string RecordingUrl { get; set; }
 
+        [JsonPropertyName("status")]
+        public string Status { get; set; }
+
+        [JsonPropertyName("isInformed")]
+        public bool IsInformed { get; set; }
+
+        [JsonPropertyName("isConfirmed")]
+        public bool IsConfirmed { get; set; }
+
         #endregion
     }
 }
