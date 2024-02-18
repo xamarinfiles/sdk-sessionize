@@ -22,8 +22,9 @@ namespace SessionizeApi.Importer.Dtos
         [JsonPropertyName("questions")]
         public QuestionDto[] Questions { get; set; }
 
+        // Sessionize "Categories" correspond to lists of single/multiple choice lists
         [JsonPropertyName("categories")]
-        public CategoryDto[] Categories { get; set; }
+        public ChoiceDto[] Choices { get; set; }
 
         [JsonPropertyName("rooms")]
         public ItemDto[] Rooms { get; set; }

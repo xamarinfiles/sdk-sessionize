@@ -41,8 +41,8 @@ namespace SessionizeApi.Importer.Models
             SessionIds = oldSpeakerDto.SessionIds
                 .Select(sessionIdUint => (Id)sessionIdUint)
                 .ToArray();
-            CategoryIds = oldSpeakerDto.CategoryIds
-                .Select(categoryIdUint => (Id)categoryIdUint)
+            ChoiceIds = oldSpeakerDto.ChoiceIds
+                .Select(choiceIdUint => (Id)choiceIdUint)
                 .ToArray();
         }
 
@@ -99,7 +99,7 @@ namespace SessionizeApi.Importer.Models
         public string FullName { get; set; }
 
         [JsonPropertyName("categoryIds")]
-        public Id[] CategoryIds { get; set; }
+        public Id[] ChoiceIds { get; set; }
 
         [JsonPropertyName("questionAnswers")]
         public QuestionAnswer[] QuestionAnswers { get; set; }
@@ -111,8 +111,8 @@ namespace SessionizeApi.Importer.Models
         [JsonPropertyName("sessionReferences")]
         public IEnumerable<Item> SessionReferences { get; private set; }
 
-        [JsonPropertyName("categoryReferences ")]
-        public IEnumerable<Item> CategoryReferences { get; private set; }
+        [JsonPropertyName("categoryReferences")]
+        public IEnumerable<Item> ChoiceReferences { get; private set; }
 
         // TODO
         [JsonPropertyName("questionReferences")]
@@ -139,7 +139,7 @@ namespace SessionizeApi.Importer.Models
         // TODO Pass QuestionDictionary
         internal void FormatReferenceFields(
             IDictionary<Id, Session> sessionDictionary,
-            IDictionary<Id, Item> categoryDictionary,
+            IDictionary<Id, Item> choiceDictionary,
             IFancyLogger fancyLogger)
         {
             var sessionReferences = SessionIds
@@ -156,13 +156,13 @@ namespace SessionizeApi.Importer.Models
                 .ToList();
             SessionReferences = sessionReferences;
 
-            var categoryReferences = CategoryIds
-                // Categories are already Items => Pull directly from dictionary
-                .Select(id => categoryDictionary[id])
-                // Sort by Category name in case added out of alphabetical order
-                .OrderBy(category => category.Name)
+            var choiceReferences = ChoiceIds
+                // Choices are already Items => Pull directly from dictionary
+                .Select(id => choiceDictionary[id])
+                // Sort by Choice name in case added out of alphabetical order
+                .OrderBy(choice => choice.Name)
                 .ToList();
-            CategoryReferences = categoryReferences;
+            ChoiceReferences = choiceReferences;
 
             // TODO Pull Question Ids and Names from dictionary => Item list
 
@@ -173,10 +173,10 @@ namespace SessionizeApi.Importer.Models
             LogDisplayShort = DebuggerDisplay;
 
             LogDisplayLong =
-                CategoryReferences.Aggregate(LogDisplayShort,
+                ChoiceReferences.Aggregate(LogDisplayShort,
                     (current, idAndName) =>
                         current
-                        + $"{NewLine}{Indent}Category {idAndName.Id}: {idAndName.Name}");
+                        + $"{NewLine}{Indent}Choice {idAndName.Id}: {idAndName.Name}");
             LogDisplayLong =
                 SessionReferences.Aggregate(LogDisplayLong,
                     (current, idAndName) =>

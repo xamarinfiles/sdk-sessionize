@@ -18,31 +18,31 @@ namespace SessionizeApi.Importer.Models
         "MemberCanBePrivate.Global")]
     [SuppressMessage("ReSharper",
         "UnusedAutoPropertyAccessor.Global")]
-    public class Category : ILogFormattable
+    public class Choice : ILogFormattable
     {
         #region Constructor
 
-        private Category(CategoryDto categoryDto,
+        private Choice(ChoiceDto choiceDto,
             IFancyLogger fancyLogger)
         {
-            Id = categoryDto.Id;
-            Title = categoryDto.Title;
-            Items = categoryDto.Items
+            Id = choiceDto.Id;
+            Title = choiceDto.Title;
+            Items = choiceDto.Items
                 .Select(itemDto => Item.Create(itemDto,
                     fancyLogger))
                 .ToArray();
-            Sort = categoryDto.Sort;
-            Type = categoryDto.Type;
+            Sort = choiceDto.Sort;
+            Type = choiceDto.Type;
         }
 
-        public static Category Create(CategoryDto categoryDto,
+        public static Choice Create(ChoiceDto choiceDto,
             IFancyLogger fancyLogger)
         {
             try
             {
-                var category = new Category(categoryDto, fancyLogger);
+                var choice = new Choice(choiceDto, fancyLogger);
 
-                return category;
+                return choice;
             }
             catch (Exception exception)
             {

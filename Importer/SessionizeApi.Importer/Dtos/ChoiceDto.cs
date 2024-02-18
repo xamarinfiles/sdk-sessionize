@@ -7,7 +7,7 @@ namespace SessionizeApi.Importer.Dtos
         "ClassNeverInstantiated.Global")]
     [SuppressMessage("ReSharper",
         "UnusedAutoPropertyAccessor.Global")]
-    public class CategoryDto
+    public class ChoiceDto
     {
         #region API Properties
 

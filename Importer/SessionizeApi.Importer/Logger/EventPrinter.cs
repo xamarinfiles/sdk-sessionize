@@ -45,7 +45,7 @@ namespace SessionizeApi.Importer.Logger
                 PrintArray(@event.Speakers, "Speakers");
                 PrintArray(@event.Sessions, "Sessions");
                 PrintArray(@event.Questions, "Questions");
-                PrintArray(@event.Categories, "Categories");
+                PrintArray(@event.Choices, "Choices");
                 PrintArray(@event.Rooms, "Rooms");
             }
             catch (Exception exception)

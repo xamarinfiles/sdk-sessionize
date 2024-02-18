@@ -35,7 +35,7 @@ namespace SessionizeApi.Importer.Dtos
         public Guid[] SpeakerIds { get; set; }
 
         [JsonPropertyName("categoryItems")]
-        public uint[] CategoryIds { get; set; }
+        public uint[] ChoiceIds { get; set; }
 
         [JsonPropertyName("questionAnswers")]
         public QuestionAnswerDto[] QuestionAnswers { get; set; }

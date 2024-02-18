@@ -37,10 +37,10 @@ namespace SessionizeApi.Importer.Models
                     Question.Create(questionDto, fancyLogger))
                 .OrderBy(question => question.Sort)
                 .ToArray();
-            Categories = allDataDto.Categories
-                .Select( categoryDto =>
-                    Category.Create(categoryDto, fancyLogger))
-                .OrderBy(category => category.Sort)
+            Choices = allDataDto.Choices
+                .Select( choiceDto =>
+                    Choice.Create(choiceDto, fancyLogger))
+                .OrderBy(choice => choice.Sort)
                 .ToArray();
             Rooms = allDataDto.Rooms
                 .Select( roomDto =>
@@ -88,7 +88,7 @@ namespace SessionizeApi.Importer.Models
         public Question[] Questions { get; set; }
 
         [JsonPropertyName("categories")]
-        public Category[] Categories { get; set; }
+        public Choice[] Choices { get; set; }
 
         [JsonPropertyName("rooms")]
         public Item[] Rooms { get; set; }
@@ -98,13 +98,13 @@ namespace SessionizeApi.Importer.Models
         #region Reference Properties
 
         [JsonIgnore]
+        public IDictionary<Id, Item> ChoiceDictionary { get; set; }
+
+        [JsonIgnore]
         public IDictionary<Id, Session> SessionDictionary { get; set; }
 
         [JsonIgnore]
         public IDictionary<Id, Speaker> SpeakerDictionary { get; set; }
-
-        [JsonIgnore]
-        public IDictionary<Id, Item> CategoryDictionary { get; set; }
 
         #endregion
 
@@ -114,10 +114,10 @@ namespace SessionizeApi.Importer.Models
         public string DebuggerDisplay { get; protected set; }
 
         [JsonIgnore]
-        public string LogDisplayShort { get; protected set; }
+        public string LogDisplayLong { get; protected set; }
 
         [JsonIgnore]
-        public string LogDisplayLong { get; protected set; }
+        public string LogDisplayShort { get; protected set; }
 
         #endregion
 
@@ -154,14 +154,15 @@ namespace SessionizeApi.Importer.Models
             SpeakerDictionary =
                 Speakers.ToDictionary(speaker => speaker.Id);
 
-            CategoryDictionary = new Dictionary<Id, Item>();
+            ChoiceDictionary = new Dictionary<Id, Item>();
             foreach (var (item, itemId) in
-                     Categories
+                     Choices
+                         // TODO Where
                          .SelectMany(
-                             category =>
-                                 category.Items.Select(item => (item, item.Id))))
+                             choice =>
+                                 choice.Items.Select(item => (item, item.Id))))
             {
-                CategoryDictionary[itemId] = item;
+                ChoiceDictionary[itemId] = item;
             }
         }
 
@@ -170,13 +171,13 @@ namespace SessionizeApi.Importer.Models
             foreach (var session in Sessions)
             {
                 session.FormatReferenceFields(SpeakerDictionary,
-                    CategoryDictionary, fancyLogger);
+                    ChoiceDictionary, fancyLogger);
             }
 
             foreach (var speaker in Speakers)
             {
                 speaker.FormatReferenceFields(SessionDictionary,
-                    CategoryDictionary, fancyLogger);
+                    ChoiceDictionary, fancyLogger);
             }
         }
 
