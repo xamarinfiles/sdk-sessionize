@@ -48,7 +48,7 @@ namespace SessionizeApi.Importer.Models
                 .OrderBy(room => room.Sort)
                 .ToArray();
 
-            PopulateReferenceDictionaries();
+            PopulateReferenceDictionaries(fancyLogger);
             FormatReferenceFields(fancyLogger);
 
             FormatLogFields(eventSource, fancyLogger);
@@ -146,23 +146,31 @@ namespace SessionizeApi.Importer.Models
 
         #region Reference Methods
 
-        private void PopulateReferenceDictionaries()
+        private void PopulateReferenceDictionaries(IFancyLogger fancyLogger)
         {
-            SessionDictionary =
-                Sessions.ToDictionary(session => session.Id);
-
-            SpeakerDictionary =
-                Speakers.ToDictionary(speaker => speaker.Id);
-
-            ChoiceDictionary = new Dictionary<Id, Item>();
-            foreach (var (item, itemId) in
-                     Choices
-                         // TODO Where
-                         .SelectMany(
-                             choice =>
-                                 choice.Items.Select(item => (item, item.Id))))
+            try
             {
-                ChoiceDictionary[itemId] = item;
+                SessionDictionary =
+                    Sessions.ToDictionary(session => session.Id);
+
+                SpeakerDictionary =
+                    Speakers.ToDictionary(speaker => speaker.Id);
+
+                ChoiceDictionary = new Dictionary<Id, Item>();
+                foreach (var (item, itemId) in
+                         Choices
+                             // TODO Temp - Only select our Categories to add to Trello card
+                             .Where(choice => choice.Title == "Categories")
+                             .SelectMany(
+                                 choice =>
+                                     choice.Items.Select(item => (item, item.Id))))
+                {
+                    ChoiceDictionary[itemId] = item;
+                }
+            }
+            catch (Exception exception)
+            {
+                fancyLogger.LogException(exception);
             }
         }
 
