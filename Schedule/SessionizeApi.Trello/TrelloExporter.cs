@@ -17,9 +17,9 @@ namespace SessionizeApi.Trello
     {
         #region Constants
 
-        private const string AcceptedListName = "Accepted Sessions";
+        private const string ConfirmedListName = "Confirmed Sessions";
 
-        private const string UnselectedListName = "Unselected Sessions";
+        private const string UnconfirmedSessions = "Unconfirmed Sessions";
 
         #endregion
 
@@ -116,8 +116,8 @@ namespace SessionizeApi.Trello
                 var sortedSpeakers =
                     SessionizeEvent.Speakers.OrderBy(speaker => speaker.FullName).ToList();
 
-                var acceptedList = await LoadTrelloList(AcceptedListName);
-                var unselectedList = await LoadTrelloList(UnselectedListName);
+                var confirmedList = await LoadTrelloList(ConfirmedListName);
+                var unconfirmedList = await LoadTrelloList(UnconfirmedSessions);
 
                 for (var speakerIndex = 0;
                      speakerIndex < SessionizeEvent.Speakers.Length;
@@ -140,22 +140,21 @@ namespace SessionizeApi.Trello
                             continue;
                         }
 
-                        var categories = session.CategoryReferences;
                         await LoadTrelloCard(
-                            categories?.Count() < 1 ? unselectedList : acceptedList,
+                            session.IsConfirmed ? confirmedList : unconfirmedList,
                             session);
                     }
                 }
 
-                await acceptedList.Refresh();
-                var acceptedCount = acceptedList.Cards.Count();
-                FancyLogger.LogScalar("Accepted Sessions", acceptedCount.ToString());
+                await confirmedList.Refresh();
+                var confirmedCount = confirmedList.Cards.Count();
+                FancyLogger.LogScalar("Confirmed Sessions", confirmedCount.ToString());
 
-                await unselectedList.Refresh();
-                var unselectedCount = unselectedList.Cards.Count();
-                FancyLogger.LogScalar("Unselected Sessions", unselectedCount.ToString());
+                await unconfirmedList.Refresh();
+                var unconfirmedCount = unconfirmedList.Cards.Count();
+                FancyLogger.LogScalar("Unconfirmed Sessions", unconfirmedCount.ToString());
 
-                var totalCount = acceptedCount + unselectedCount;
+                var totalCount = confirmedCount + unconfirmedCount;
                 FancyLogger.LogScalar("Total Sessions", totalCount.ToString());
             }
             catch (Exception exception)
@@ -210,35 +209,17 @@ namespace SessionizeApi.Trello
                 FancyLogger.LogScalar("Card Name", cardName);
                 FancyLogger.LogScalar("Card Description", cardDescription);
 
-                var sessionCategories =
-                    session.CategoryReferences
-                        .Select(category => category.Name)
+                var sessionChoices =
+                    session.ChoiceReferences
+                        .Select(choice => choice.Name)
                         .ToList();
 
                 var cardLabels = new List<ILabel>();
-                foreach (var category in sessionCategories)
+                foreach (var choice in sessionChoices)
                 {
-                    //// TODO Still need for OCC 2023?
-                    //// TEMP HACK until fix categories in Sessionize
-                    //string adjustedCategory;
-                    //switch (category)
-                    //{
-                    //    case "AI & ML":
-                    //        adjustedCategory = "AI / ML";
-                    //        break;
-                    //    case "Tools & IDEs":
-                    //        adjustedCategory = "Tools / IDEs";
-                    //        break;
-                    //    default:
-                    //        adjustedCategory = category;
-                    //        break;
-                    //}
+                    var label = await LoadTrelloLabel(choice);
 
-                    // var label = await LoadTrelloLabel(adjustedCategory);
-
-                    var label = await LoadTrelloLabel(category);
-
-                    FancyLogger.LogScalar(category, label.Id);
+                    FancyLogger.LogScalar(choice, label.Id);
 
                     cardLabels.Add(label);
                 }
