@@ -36,12 +36,9 @@ namespace SessionizeApi.Importer.Tests.Smoke
         {
             try
             {
-                // TODO Centralize?
-                var writeJsonOptions = GetDebugJsonOptions(true);
-
-                FancyLogger = new FancyLogger(writeJsonOptions: writeJsonOptions);
+                FancyLogger = new FancyLogger(
+                    writeJsonOptions: DefaultWriteJsonOptionsWithNull);
                 //AssemblyLogger = new AssemblyLogger(FancyLogger);
-
                 EventImporter = new EventImporter(FancyLogger);
                 EventPrinter = new EventPrinter(FancyLogger);
             }
