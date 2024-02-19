@@ -138,14 +138,14 @@ namespace SessionizeApi.Importer.Models
         // TODO Convert dictionary arguments to refs? [Affects LINQ expression]
         // TODO Pass QuestionDictionary
         internal void FormatReferenceFields(
-            IDictionary<Id, Session> sessionDictionary,
-            IDictionary<Id, Item> choiceDictionary,
+            IDictionary<string, Session> sessionDictionary,
+            IDictionary<string, Item> choiceDictionary,
             IFancyLogger fancyLogger)
         {
             var sessionReferences = SessionIds
                 // Dereference Session Id to get Title
                 .Select(id =>
-                    (id, sessionDictionary[id].Title))
+                    (id, sessionDictionary[id.ToString()].Title))
                 // Sort alphabetically by Session's Title
                 .OrderBy(idAndName =>
                     idAndName.Title)
@@ -158,7 +158,7 @@ namespace SessionizeApi.Importer.Models
 
             var choiceReferences = ChoiceIds
                 // Choices are already Items => Pull directly from dictionary
-                .Select(id => choiceDictionary[id])
+                .Select(id => choiceDictionary[id.ToString()])
                 // Sort by Choice name in case added out of alphabetical order
                 .OrderBy(choice => choice.Name)
                 .ToList();

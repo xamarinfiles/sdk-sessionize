@@ -134,7 +134,7 @@ namespace SessionizeApi.Trello
                             args: new object[] { speakerIndex, sessionIdAndName.LogDisplayShort });
 
                         var session =
-                            SessionizeEvent.SessionDictionary[sessionIdAndName.Id];
+                            SessionizeEvent.SessionDictionary[sessionIdAndName.Id.ToString()];
                         if (session is null)
                         {
                             continue;

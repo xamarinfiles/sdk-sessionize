@@ -98,13 +98,13 @@ namespace SessionizeApi.Importer.Models
         #region Reference Properties
 
         [JsonIgnore]
-        public IDictionary<Id, Item> ChoiceDictionary { get; set; }
+        public IDictionary<string, Item> ChoiceDictionary { get; set; }
 
         [JsonIgnore]
-        public IDictionary<Id, Session> SessionDictionary { get; set; }
+        public IDictionary<string, Session> SessionDictionary { get; set; }
 
         [JsonIgnore]
-        public IDictionary<Id, Speaker> SpeakerDictionary { get; set; }
+        public IDictionary<string, Speaker> SpeakerDictionary { get; set; }
 
         #endregion
 
@@ -128,7 +128,7 @@ namespace SessionizeApi.Importer.Models
         {
             try
             {
-                if (Deserialize<AllDataDto>(json, ParseJsonOptions) is
+                if (Deserialize<AllDataDto>(json, DefaultReadJsonOptions) is
                     { } allData)
                 {
                     return allData;
@@ -151,21 +151,19 @@ namespace SessionizeApi.Importer.Models
             try
             {
                 SessionDictionary =
-                    Sessions.ToDictionary(session => session.Id);
+                    Sessions
+                        .ToDictionary(session => session.Id.ToString());
 
                 SpeakerDictionary =
-                    Speakers.ToDictionary(speaker => speaker.Id);
+                    Speakers
+                        .ToDictionary(speaker => speaker.Id.ToString());
 
-                ChoiceDictionary = new Dictionary<Id, Item>();
+                ChoiceDictionary = new Dictionary<string, Item>();
                 foreach (var (item, itemId) in
-                         Choices
-                             // TODO Temp - Only select our Categories to add to Trello card
-                             .Where(choice => choice.Title == "Categories")
-                             .SelectMany(
-                                 choice =>
-                                     choice.Items.Select(item => (item, item.Id))))
+                    Choices.SelectMany(choice =>
+                        choice.Items.Select(item => (item, item.Id))))
                 {
-                    ChoiceDictionary[itemId] = item;
+                    ChoiceDictionary[itemId.ToString()] = item;
                 }
             }
             catch (Exception exception)

@@ -63,10 +63,6 @@ namespace SessionizeApi.Importer.Models
             {
                 var session = new Session(oldSessionDto, fancyLogger);
 
-                // TEMP
-                fancyLogger.LogObject<Session>(session);
-                fancyLogger.LogScalar($"Session {session.Id.Guid}", session.ToString());
-
                 return session;
             }
             catch (Exception exception)
@@ -169,14 +165,14 @@ namespace SessionizeApi.Importer.Models
         // TODO Convert dictionary arguments to refs? [Affects LINQ expression]
         // TODO Pass QuestionDictionary
         internal void FormatReferenceFields(
-            IDictionary<Id, Speaker> speakerDictionary,
-            IDictionary<Id, Item> choiceDictionary,
+            IDictionary<string, Speaker> speakerDictionary,
+            IDictionary<string, Item> choiceDictionary,
             IFancyLogger fancyLogger)
         {
             var speakerReferences = SpeakerIds
                 // Dereference Speaker Id to get Full Name
                 .Select(id =>
-                    (id, speakerDictionary[id].FullName))
+                    (id, speakerDictionary[id.ToString()].FullName))
                 // Sort alphabetically by Speaker's Full Name
                 .OrderBy(idAndName =>
                     idAndName.FullName)
@@ -189,8 +185,7 @@ namespace SessionizeApi.Importer.Models
 
             var choiceReferences = ChoiceIds
                 // Choices are already Items => Pull directly from dictionary
-                .Where(choiceDictionary.ContainsKey)
-                .Select(id => choiceDictionary[id])
+                .Select(id => choiceDictionary[id.ToString()])
                 // Sort by Choice name in case added out of alphabetical order
                 .OrderBy(choice => choice.Name)
                 .ToList();

@@ -43,64 +43,11 @@ namespace SessionizeApi.Importer.Serialization
 
     public class IdConverter : JsonConverter<Id>
     {
-        [SuppressMessage("ReSharper", "InvertIf")]
-        [SuppressMessage("ReSharper", "SwitchStatementHandlesSomeKnownEnumValuesWithDefault")]
+        // Read converter is skipped due to implicit operators on incoming Ids
         public override Id Read(ref Utf8JsonReader reader, Type typeToConvert,
             JsonSerializerOptions options)
         {
-            try
-            {
-                switch (reader.TokenType)
-                {
-                    // Unusual match is due to variety of Sessionize id formats
-                    case JsonTokenType.String:
-                        var idStr = reader.GetString();
-
-                        if (uint.TryParse(idStr, out var result))
-                        {
-                            return new Id { Number = result };
-                        }
-
-                        if (Guid.TryParse(idStr, out var strGuid))
-                        {
-                            return new Id { Guid = strGuid };
-                        }
-
-                        // TEMP
-                        Debug.WriteLine($"Id (string => empty) = '{idStr}'");
-
-                        return new Id();
-                    case JsonTokenType.Number
-                        when reader.TryGetUInt32(out var idNum):
-
-                        return new Id { Number = idNum };
-                    default:
-                        var input =
-                            JsonDocument.ParseValue(ref reader).RootElement.Clone();
-
-                        Debug.WriteLine(
-                            $"Id ({reader.TokenType} => empty) = '{input}'");
-
-                        return new Id();
-                }
-            }
-            catch (Exception exception)
-            {
-                var unrecognizedJson =
-                    JsonDocument.ParseValue(ref reader).RootElement.Clone();
-
-                Debug.WriteLine($"Unrecognized Id = {unrecognizedJson}{NewLine}");
-
-                Debug.WriteLine($"EXCEPTION:  {exception.Message}{NewLine}");
-
-                var innerExceptionMessage = exception.InnerException?.Message;
-
-                if (!string.IsNullOrWhiteSpace(innerExceptionMessage))
-                    Debug.WriteLine(
-                        $"{Indent}INNER EXCEPTION:  {innerExceptionMessage}{NewLine}");
-
-                return new Id();
-            }
+            throw new NotImplementedException();
         }
 
         public override void Write(Utf8JsonWriter writer, Id value,
