@@ -12,9 +12,7 @@ namespace SessionizeApi.Importer.Tests.Smoke
         // TODO Move to config files
         #region Sessionize Fields
 
-        //private const string EventId = SessionizeSampleId;
-        //private const string EventId = OrlandoCodeCamp2023Id;
-        private const string EventId = OrlandoCodeCamp2024Id;
+        private const string EventId = SessionizeSampleId;
 
         #endregion
 

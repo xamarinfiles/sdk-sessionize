@@ -1,8 +1,8 @@
-﻿using SessionizeApi.Importer;
+﻿using System;
+using System.Threading.Tasks;
+using SessionizeApi.Importer;
 using SessionizeApi.Importer.Logger;
 using SessionizeApi.Importer.Models;
-using System;
-using System.Threading.Tasks;
 
 namespace SessionizeApi.Shared
 {
