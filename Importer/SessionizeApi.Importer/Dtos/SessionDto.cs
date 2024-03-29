@@ -35,13 +35,13 @@ namespace SessionizeApi.Importer.Dtos
         public Guid[] SpeakerIds { get; set; }
 
         [JsonPropertyName("categoryItems")]
-        public uint[] CategoryIds { get; set; }
+        public uint[] ChoiceIds { get; set; }
 
         [JsonPropertyName("questionAnswers")]
         public QuestionAnswerDto[] QuestionAnswers { get; set; }
 
         [JsonPropertyName("roomId")]
-        public uint RoomId { get; set; }
+        public uint? RoomId { get; set; }
 
         // TODO Check format and decide conversion when have data
         [JsonPropertyName("liveUrl")]
@@ -50,6 +50,15 @@ namespace SessionizeApi.Importer.Dtos
         // TODO Check format and decide conversion when have data
         [JsonPropertyName("recordingUrl")]
         public string RecordingUrl { get; set; }
+
+        [JsonPropertyName("status")]
+        public string Status { get; set; }
+
+        [JsonPropertyName("isInformed")]
+        public bool IsInformed { get; set; }
+
+        [JsonPropertyName("isConfirmed")]
+        public bool IsConfirmed { get; set; }
 
         #endregion
     }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.Json.Serialization;
+using XamarinFiles.FancyLogger;
 using static SessionizeApi.Importer.Constants.Characters;
 
 namespace SessionizeApi.Importer.Models
@@ -14,7 +15,7 @@ namespace SessionizeApi.Importer.Models
     {
         #region Constructor
 
-        private Speaker(SpeakerDto oldSpeakerDto, LoggingService loggingService)
+        private Speaker(SpeakerDto oldSpeakerDto, IFancyLogger fancyLogger)
         {
             // API Properties
 
@@ -26,13 +27,13 @@ namespace SessionizeApi.Importer.Models
             ProfilePicture = oldSpeakerDto.ProfilePicture;
             Links = oldSpeakerDto.Links
                 .Select(linkDto =>
-                    Link.Create(linkDto, loggingService))
+                    Link.Create(linkDto, fancyLogger))
                 .ToArray();
             FullName = oldSpeakerDto.FullName;
             QuestionAnswers = oldSpeakerDto.QuestionAnswers
                 .Select(answerDto =>
                     QuestionAnswer.Create(answerDto,
-                        loggingService))
+                        fancyLogger))
                 .ToArray();
 
 
@@ -40,23 +41,23 @@ namespace SessionizeApi.Importer.Models
             SessionIds = oldSpeakerDto.SessionIds
                 .Select(sessionIdUint => (Id)sessionIdUint)
                 .ToArray();
-            CategoryIds = oldSpeakerDto.CategoryIds
-                .Select(categoryIdUint => (Id)categoryIdUint)
+            ChoiceIds = oldSpeakerDto.ChoiceIds
+                .Select(choiceIdUint => (Id)choiceIdUint)
                 .ToArray();
         }
 
         public static Speaker Create(SpeakerDto oldSpeakerDto,
-            LoggingService loggingService)
+            IFancyLogger fancyLogger)
         {
             try
             {
-                var speaker = new Speaker(oldSpeakerDto, loggingService);
+                var speaker = new Speaker(oldSpeakerDto, fancyLogger);
 
                 return speaker;
             }
             catch (Exception exception)
             {
-                loggingService.LogExceptionRouter(exception);
+                fancyLogger.LogException(exception);
 
                 return null;
             }
@@ -98,7 +99,7 @@ namespace SessionizeApi.Importer.Models
         public string FullName { get; set; }
 
         [JsonPropertyName("categoryIds")]
-        public Id[] CategoryIds { get; set; }
+        public Id[] ChoiceIds { get; set; }
 
         [JsonPropertyName("questionAnswers")]
         public QuestionAnswer[] QuestionAnswers { get; set; }
@@ -110,8 +111,8 @@ namespace SessionizeApi.Importer.Models
         [JsonPropertyName("sessionReferences")]
         public IEnumerable<Item> SessionReferences { get; private set; }
 
-        [JsonPropertyName("categoryReferences ")]
-        public IEnumerable<Item> CategoryReferences { get; private set; }
+        [JsonPropertyName("categoryReferences")]
+        public IEnumerable<Item> ChoiceReferences { get; private set; }
 
         // TODO
         [JsonPropertyName("questionReferences")]
@@ -137,31 +138,31 @@ namespace SessionizeApi.Importer.Models
         // TODO Convert dictionary arguments to refs? [Affects LINQ expression]
         // TODO Pass QuestionDictionary
         internal void FormatReferenceFields(
-            IDictionary<Id, Session> sessionDictionary,
-            IDictionary<Id, Item> categoryDictionary,
-            LoggingService loggingService)
+            IDictionary<string, Session> sessionDictionary,
+            IDictionary<string, Item> choiceDictionary,
+            IFancyLogger fancyLogger)
         {
             var sessionReferences = SessionIds
                 // Dereference Session Id to get Title
                 .Select(id =>
-                    (id, sessionDictionary[id].Title))
+                    (id, sessionDictionary[id.ToString()].Title))
                 // Sort alphabetically by Session's Title
                 .OrderBy(idAndName =>
                     idAndName.Title)
                 // Project into Item in same alphabetical order
                 .Select((idAndName, index) =>
                     Item.Create(idAndName.id, idAndName.Title, (uint)index,
-                        loggingService))
+                        fancyLogger))
                 .ToList();
             SessionReferences = sessionReferences;
 
-            var categoryReferences = CategoryIds
-                // Categories are already Items => Pull directly from dictionary
-                .Select(id => categoryDictionary[id])
-                // Sort by Category name in case added out of alphabetical order
-                .OrderBy(category => category.Name)
+            var choiceReferences = ChoiceIds
+                // Choices are already Items => Pull directly from dictionary
+                .Select(id => choiceDictionary[id.ToString()])
+                // Sort by Choice name in case added out of alphabetical order
+                .OrderBy(choice => choice.Name)
                 .ToList();
-            CategoryReferences = categoryReferences;
+            ChoiceReferences = choiceReferences;
 
             // TODO Pull Question Ids and Names from dictionary => Item list
 
@@ -172,10 +173,10 @@ namespace SessionizeApi.Importer.Models
             LogDisplayShort = DebuggerDisplay;
 
             LogDisplayLong =
-                CategoryReferences.Aggregate(LogDisplayShort,
+                ChoiceReferences.Aggregate(LogDisplayShort,
                     (current, idAndName) =>
                         current
-                        + $"{NewLine}{Indent}Category {idAndName.Id}: {idAndName.Name}");
+                        + $"{NewLine}{Indent}Choice {idAndName.Id}: {idAndName.Name}");
             LogDisplayLong =
                 SessionReferences.Aggregate(LogDisplayLong,
                     (current, idAndName) =>

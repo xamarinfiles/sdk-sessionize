@@ -1,30 +1,30 @@
-﻿using Manatee.Trello;
-using SessionizeApi.Importer.Logger;
+using Manatee.Trello;
 using SessionizeApi.Importer.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
+using XamarinFiles.FancyLogger;
 using static Manatee.Trello.LabelColor;
 using TrelloIList = Manatee.Trello.IList;
 
 namespace SessionizeApi.Trello
 {
+    // TODO Fix custom categories with "&" or split into separate
     [SuppressMessage("ReSharper", "ArrangeObjectCreationWhenTypeEvident")]
     public class TrelloExporter
     {
         #region Constants
 
-        private const string AcceptedListName = "Accepted Sessions";
+        private const string ConfirmedListName = "Confirmed Sessions";
 
-        private const string UnselectedListName = "Unselected Sessions";
+        private const string UnconfirmedSessions = "Unconfirmed Sessions";
 
         #endregion
 
         #region Services
-
-        private static LoggingService LoggingService { get; set; }
+        private IFancyLogger FancyLogger { get; }
 
         #endregion
 
@@ -50,16 +50,20 @@ namespace SessionizeApi.Trello
 
         #endregion
 
-        #region Trello Methods
+        #region Constructor
 
-        public TrelloExporter(LoggingService loggingService, string apiKey,
+        public TrelloExporter(IFancyLogger fancyLogger, string apiKey,
             string apiToken, LabelColor defaultLabelColor = Black)
         {
-            LoggingService = loggingService;
+            FancyLogger = fancyLogger;
             ApiKey = apiKey;
             ApiToken = apiToken;
             DefaultLabelColor = defaultLabelColor;
         }
+
+        #endregion
+
+        #region Trello Methods
 
         public async Task ConnectToTrelloAndLoadBoard(Event @event, string trelloBoardId)
         {
@@ -75,7 +79,7 @@ namespace SessionizeApi.Trello
             await LoadTrelloBoard();
         }
 
-        private static void SetupTrelloUserCredentials()
+        private void SetupTrelloUserCredentials()
         {
             try
             {
@@ -84,7 +88,7 @@ namespace SessionizeApi.Trello
             }
             catch (Exception exception)
             {
-                LoggingService.LogExceptionRouter(exception);
+                FancyLogger.LogException(exception);
             }
         }
 
@@ -99,7 +103,7 @@ namespace SessionizeApi.Trello
             }
             catch (Exception exception)
             {
-                LoggingService.LogExceptionRouter(exception);
+                FancyLogger.LogException(exception);
 
                 return null;
             }
@@ -112,8 +116,8 @@ namespace SessionizeApi.Trello
                 var sortedSpeakers =
                     SessionizeEvent.Speakers.OrderBy(speaker => speaker.FullName).ToList();
 
-                var acceptedList = await LoadTrelloList(AcceptedListName);
-                var unselectedList = await LoadTrelloList(UnselectedListName);
+                var confirmedList = await LoadTrelloList(ConfirmedListName);
+                var unconfirmedList = await LoadTrelloList(UnconfirmedSessions);
 
                 for (var speakerIndex = 0;
                      speakerIndex < SessionizeEvent.Speakers.Length;
@@ -121,45 +125,41 @@ namespace SessionizeApi.Trello
                 {
                     var speaker = sortedSpeakers[speakerIndex];
 
-                    LoggingService.LogHeader("{0}: {1}", speakerIndex,
-                        speaker.LogDisplayShort);
+                    FancyLogger.LogHeader("{0}: {1}",
+                        args: new object[] { speakerIndex, speaker.LogDisplayShort });
 
-                    foreach (var sessionIdAndName in speaker.SessionIdsAndNames)
+                    foreach (var sessionIdAndName in speaker.SessionReferences)
                     {
-                        LoggingService.LogSubheader("{0}: {1}", speakerIndex,
-                            sessionIdAndName.LogDisplayShort);
+                        FancyLogger.LogHeader("{0}: {1}",
+                            args: new object[] { speakerIndex, sessionIdAndName.LogDisplayShort });
 
                         var session =
-                            SessionizeEvent.SessionDictionary[sessionIdAndName.Id];
+                            SessionizeEvent.SessionDictionary[sessionIdAndName.Id.ToString()];
                         if (session is null)
                         {
                             continue;
                         }
 
-                        // HACK OCC 2023 only categorized accepted sessions
-                        var categories = session.CategoryIdsAndNames;
                         await LoadTrelloCard(
-                            categories?.Count() < 1 ? unselectedList : acceptedList,
+                            session.IsConfirmed ? confirmedList : unconfirmedList,
                             session);
                     }
-
-                    LoggingService.LogBlankLine();
                 }
 
-                await acceptedList.Refresh();
-                var acceptedCount = acceptedList.Cards.Count();
-                LoggingService.LogValue("Accepted Sessions", acceptedCount.ToString());
+                await confirmedList.Refresh();
+                var confirmedCount = confirmedList.Cards.Count();
+                FancyLogger.LogScalar("Confirmed Sessions", confirmedCount.ToString());
 
-                await unselectedList.Refresh();
-                var unselectedCount = unselectedList.Cards.Count();
-                LoggingService.LogValue("Unselected Sessions", unselectedCount.ToString());
+                await unconfirmedList.Refresh();
+                var unconfirmedCount = unconfirmedList.Cards.Count();
+                FancyLogger.LogScalar("Unconfirmed Sessions", unconfirmedCount.ToString());
 
-                var totalCount = acceptedCount + unselectedCount;
-                LoggingService.LogValue("Total Sessions", totalCount.ToString());
+                var totalCount = confirmedCount + unconfirmedCount;
+                FancyLogger.LogScalar("Total Sessions", totalCount.ToString());
             }
             catch (Exception exception)
             {
-                LoggingService.LogExceptionRouter(exception);
+                FancyLogger.LogException(exception);
             }
         }
 
@@ -197,7 +197,7 @@ namespace SessionizeApi.Trello
         private async Task LoadTrelloCard(TrelloIList trelloList, Session session)
         {
             // TEMP
-            LoggingService.LogValue(trelloList.Name, session.Title);
+            FancyLogger.LogScalar(trelloList.Name, session.Title);
 
             try
             {
@@ -206,27 +206,27 @@ namespace SessionizeApi.Trello
                 var cardDescription = session.Description;
 
                 // TEMP
-                LoggingService.LogValue("Card Name", cardName);
-                LoggingService.LogValue("Card Description", cardDescription);
+                FancyLogger.LogScalar("Card Name", cardName);
+                FancyLogger.LogScalar("Card Description", cardDescription);
 
-                var sessionCategories =
-                    session.CategoryIdsAndNames
-                        .Select(category => category.Name)
+                var sessionChoices =
+                    session.ChoiceReferences
+                        .Select(choice => choice.Name)
                         .ToList();
 
                 var cardLabels = new List<ILabel>();
-                foreach (var category in sessionCategories)
+                foreach (var choice in sessionChoices)
                 {
-                    var label = await LoadTrelloLabel(category);
+                    var label = await LoadTrelloLabel(choice);
 
-                    LoggingService.LogValue(category, label.Id);
+                    FancyLogger.LogScalar(choice, label.Id);
 
                     cardLabels.Add(label);
                 }
 
                 if (cardLabels.Count > 0)
                     // TEMP
-                    LoggingService.LogValue("Card Labels",
+                    FancyLogger.LogScalar("Card Labels",
                         string.Join(", ",
                             cardLabels.Select(label => label.Name).ToList()));
 
@@ -236,7 +236,7 @@ namespace SessionizeApi.Trello
                 if (trelloList.Cards
                     .Any(card => card.Name.StartsWith(session.Id.ToString())))
                 {
-                    LoggingService.LogWarning("DUPLICATE");
+                    FancyLogger.LogWarning("DUPLICATE");
 
                     return;
                 }
@@ -249,7 +249,7 @@ namespace SessionizeApi.Trello
             }
             catch (Exception exception)
             {
-                LoggingService.LogExceptionRouter(exception);
+                FancyLogger.LogException(exception);
             }
         }
 

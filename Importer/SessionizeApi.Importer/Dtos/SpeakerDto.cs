@@ -42,7 +42,7 @@ namespace SessionizeApi.Importer.Dtos
         public string FullName { get; set; }
 
         [JsonPropertyName("categoryItems")]
-        public uint[] CategoryIds { get; set; }
+        public uint[] ChoiceIds { get; set; }
 
         [JsonPropertyName("questionAnswers")]
         public QuestionAnswerDto[] QuestionAnswers { get; set; }

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json.Serialization;
+using XamarinFiles.FancyLogger;
 
 namespace SessionizeApi.Importer.Models
 {
@@ -17,35 +18,35 @@ namespace SessionizeApi.Importer.Models
         "MemberCanBePrivate.Global")]
     [SuppressMessage("ReSharper",
         "UnusedAutoPropertyAccessor.Global")]
-    public class Category : ILogFormattable
+    public class Choice : ILogFormattable
     {
         #region Constructor
 
-        private Category(CategoryDto categoryDto,
-            LoggingService loggingService)
+        private Choice(ChoiceDto choiceDto,
+            IFancyLogger fancyLogger)
         {
-            Id = categoryDto.Id;
-            Title = categoryDto.Title;
-            Items = categoryDto.Items
+            Id = choiceDto.Id;
+            Title = choiceDto.Title;
+            Items = choiceDto.Items
                 .Select(itemDto => Item.Create(itemDto,
-                    loggingService))
+                    fancyLogger))
                 .ToArray();
-            Sort = categoryDto.Sort;
-            Type = categoryDto.Type;
+            Sort = choiceDto.Sort;
+            Type = choiceDto.Type;
         }
 
-        public static Category Create(CategoryDto categoryDto,
-            LoggingService loggingService)
+        public static Choice Create(ChoiceDto choiceDto,
+            IFancyLogger fancyLogger)
         {
             try
             {
-                var category = new Category(categoryDto, loggingService);
+                var choice = new Choice(choiceDto, fancyLogger);
 
-                return category;
+                return choice;
             }
             catch (Exception exception)
             {
-                loggingService.LogExceptionRouter(exception);
+                fancyLogger.LogException(exception);
 
                 return null;
             }

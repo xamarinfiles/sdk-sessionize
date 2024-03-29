@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.Json.Serialization;
+using XamarinFiles.FancyLogger;
 using static SessionizeApi.Importer.Serialization.Configurations;
 using static System.Text.Json.JsonSerializer;
 
@@ -15,55 +16,58 @@ namespace SessionizeApi.Importer.Models
     {
         #region Constructors
 
-        private Event(AllDataDto allDataDto, LoggingService loggingService,
+        private Event(AllDataDto allDataDto, IFancyLogger fancyLogger,
             string eventSource)
         {
+            if (allDataDto == null)
+                return;
+
             Sessions = allDataDto.Sessions
                 .Select(sessionDto =>
-                    Session.Create(sessionDto, loggingService))
+                    Session.Create(sessionDto, fancyLogger))
                 .OrderBy(session => session.Title)
                 .ToArray();
             Speakers = allDataDto.Speakers
                 .Select(speakerDto =>
-                    Speaker.Create(speakerDto, loggingService))
+                    Speaker.Create(speakerDto, fancyLogger))
                 .OrderBy(speaker => speaker.FullName)
                 .ToArray();
             Questions = allDataDto.Questions
                 .Select(questionDto =>
-                    Question.Create(questionDto, loggingService))
+                    Question.Create(questionDto, fancyLogger))
                 .OrderBy(question => question.Sort)
                 .ToArray();
-            Categories = allDataDto.Categories
-                .Select( categoryDto =>
-                    Category.Create(categoryDto, loggingService))
-                .OrderBy(category => category.Sort)
+            Choices = allDataDto.Choices
+                .Select( choiceDto =>
+                    Choice.Create(choiceDto, fancyLogger))
+                .OrderBy(choice => choice.Sort)
                 .ToArray();
             Rooms = allDataDto.Rooms
                 .Select( roomDto =>
-                    Item.Create(roomDto, loggingService))
+                    Item.Create(roomDto, fancyLogger))
                 .OrderBy(room => room.Sort)
                 .ToArray();
 
-            PopulateReferenceDictionaries();
-            FormatReferenceFields(loggingService);
+            PopulateReferenceDictionaries(fancyLogger);
+            FormatReferenceFields(fancyLogger);
 
-            FormatLogFields(eventSource, loggingService);
+            FormatLogFields(eventSource, fancyLogger);
         }
 
         public static Event Create(string allDataJson,
-            LoggingService loggingService, string eventSource = null)
+            IFancyLogger fancyLogger, string eventSource = null)
         {
             try
             {
-                var allData = FromJson(allDataJson, loggingService, eventSource);
+                var allData = FromJson(allDataJson, fancyLogger, eventSource);
 
-                var @event = new Event(allData, loggingService, eventSource);
+                var @event = new Event(allData, fancyLogger, eventSource);
 
                 return @event;
             }
             catch (Exception exception)
             {
-                loggingService.LogExceptionRouter(exception);
+                fancyLogger.LogException(exception);
 
                 return null;
             }
@@ -84,7 +88,7 @@ namespace SessionizeApi.Importer.Models
         public Question[] Questions { get; set; }
 
         [JsonPropertyName("categories")]
-        public Category[] Categories { get; set; }
+        public Choice[] Choices { get; set; }
 
         [JsonPropertyName("rooms")]
         public Item[] Rooms { get; set; }
@@ -94,13 +98,13 @@ namespace SessionizeApi.Importer.Models
         #region Reference Properties
 
         [JsonIgnore]
-        public IDictionary<Id, Session> SessionDictionary { get; set; }
+        public IDictionary<string, Item> ChoiceDictionary { get; set; }
 
         [JsonIgnore]
-        public IDictionary<Id, Speaker> SpeakerDictionary { get; set; }
+        public IDictionary<string, Session> SessionDictionary { get; set; }
 
         [JsonIgnore]
-        public IDictionary<Id, Item> CategoryDictionary { get; set; }
+        public IDictionary<string, Speaker> SpeakerDictionary { get; set; }
 
         #endregion
 
@@ -110,21 +114,21 @@ namespace SessionizeApi.Importer.Models
         public string DebuggerDisplay { get; protected set; }
 
         [JsonIgnore]
-        public string LogDisplayShort { get; protected set; }
+        public string LogDisplayLong { get; protected set; }
 
         [JsonIgnore]
-        public string LogDisplayLong { get; protected set; }
+        public string LogDisplayShort { get; protected set; }
 
         #endregion
 
         #region Load Methods
 
         private static AllDataDto FromJson(string json,
-            LoggingService loggingService, string eventSource)
+            IFancyLogger fancyLogger, string eventSource)
         {
             try
             {
-                if (Deserialize<AllDataDto>(json, ParseJsonOptions) is
+                if (Deserialize<AllDataDto>(json, DefaultReadJsonOptions) is
                     { } allData)
                 {
                     return allData;
@@ -132,7 +136,7 @@ namespace SessionizeApi.Importer.Models
             }
             catch (Exception exception)
             {
-                loggingService.LogExceptionRouter(exception);
+                fancyLogger.LogException(exception);
             }
 
             return null;
@@ -142,37 +146,44 @@ namespace SessionizeApi.Importer.Models
 
         #region Reference Methods
 
-        private void PopulateReferenceDictionaries()
+        private void PopulateReferenceDictionaries(IFancyLogger fancyLogger)
         {
-            SessionDictionary =
-                Sessions.ToDictionary(session => session.Id);
-
-            SpeakerDictionary =
-                Speakers.ToDictionary(speaker => speaker.Id);
-
-            CategoryDictionary = new Dictionary<Id, Item>();
-            foreach (var (item, itemId) in
-                     Categories
-                         .SelectMany(
-                             category =>
-                                 category.Items.Select(item => (item, item.Id))))
+            try
             {
-                CategoryDictionary[itemId] = item;
+                SessionDictionary =
+                    Sessions
+                        .ToDictionary(session => session.Id.ToString());
+
+                SpeakerDictionary =
+                    Speakers
+                        .ToDictionary(speaker => speaker.Id.ToString());
+
+                ChoiceDictionary = new Dictionary<string, Item>();
+                foreach (var (item, itemId) in
+                    Choices.SelectMany(choice =>
+                        choice.Items.Select(item => (item, item.Id))))
+                {
+                    ChoiceDictionary[itemId.ToString()] = item;
+                }
+            }
+            catch (Exception exception)
+            {
+                fancyLogger.LogException(exception);
             }
         }
 
-        private void FormatReferenceFields(LoggingService loggingService)
+        private void FormatReferenceFields(IFancyLogger fancyLogger)
         {
             foreach (var session in Sessions)
             {
                 session.FormatReferenceFields(SpeakerDictionary,
-                    CategoryDictionary, loggingService);
+                    ChoiceDictionary, fancyLogger);
             }
 
             foreach (var speaker in Speakers)
             {
                 speaker.FormatReferenceFields(SessionDictionary,
-                    CategoryDictionary, loggingService);
+                    ChoiceDictionary, fancyLogger);
             }
         }
 
@@ -181,7 +192,7 @@ namespace SessionizeApi.Importer.Models
         #region Formatting Methods
 
         private void FormatLogFields(string eventSource,
-            LoggingService loggingService)
+            IFancyLogger fancyLogger)
         {
             try
             {
@@ -194,7 +205,7 @@ namespace SessionizeApi.Importer.Models
             }
             catch (Exception exception)
             {
-                loggingService.LogExceptionRouter(exception);
+                fancyLogger.LogException(exception);
             }
         }
 

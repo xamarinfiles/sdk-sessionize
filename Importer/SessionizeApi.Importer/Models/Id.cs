@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Text.Json.Serialization;
+using SessionizeApi.Importer.Serialization;
+using static System.Guid;
 
 namespace SessionizeApi.Importer.Models
 {
+    [JsonConverter(typeof(IdConverter))]
     public struct Id
     {
         #region API Properties
@@ -13,7 +17,7 @@ namespace SessionizeApi.Importer.Models
 
         #endregion
 
-        #region Load Operators
+        #region Read Operators
 
         public static implicit operator Id(uint number) =>
             new() { Number = number };
@@ -30,11 +34,13 @@ namespace SessionizeApi.Importer.Models
 
         public override string ToString()
         {
-            return Number != null
+            var str = Number != null
                 ? ((uint)Number).ToString()
                 : Guid != null
                     ? ((Guid)Guid).ToString()
                     : "NULL";
+
+            return str;
         }
 
         #endregion
@@ -48,7 +54,7 @@ namespace SessionizeApi.Importer.Models
                 return new Id { Number = number };
             }
 
-            if (System.Guid.TryParse(str, out var guid))
+            if (TryParse(str, out var guid))
             {
                 return new Id { Guid = guid };
             }

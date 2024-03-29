@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using XamarinFiles.FancyLogger;
 
 namespace SessionizeApi.Importer.Logger
 {
@@ -11,16 +12,16 @@ namespace SessionizeApi.Importer.Logger
     {
         #region Constructor
 
-        public EventPrinter(LoggingService loggingService)
+        public EventPrinter(IFancyLogger fancyLogger)
         {
-            LoggingService = loggingService;
+            FancyLogger = fancyLogger;
         }
 
         #endregion
 
         #region Services
 
-        private LoggingService LoggingService { get; }
+        private IFancyLogger FancyLogger { get; }
 
         #endregion
 
@@ -28,9 +29,9 @@ namespace SessionizeApi.Importer.Logger
 
         [Conditional("DEBUG")]
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
-        public void PrintEvent(Event @event, bool printEvent)
+        public void PrintEvent(Event @event, bool? printDetails = false)
         {
-            if (@event == null || printEvent == false)
+            if (@event == null)
                 return;
 
             try
@@ -39,22 +40,31 @@ namespace SessionizeApi.Importer.Logger
                     ? "All Data"
                     : @event.DebuggerDisplay;
 
-                LoggingService.LogHeader(header);
-
-                PrintArray(@event.Speakers, "Speakers");
-                PrintArray(@event.Sessions, "Sessions");
-                PrintArray(@event.Questions, "Questions");
-                PrintArray(@event.Categories, "Categories");
-                PrintArray(@event.Rooms, "Rooms");
+                FancyLogger.LogHeader(header);
+                PrintEventDetails(@event, printDetails);
+                PrintEventSummary(@event);
             }
             catch (Exception exception)
             {
-                LoggingService.LogExceptionRouter(exception);
+                FancyLogger.LogException(exception);
             }
         }
 
         [Conditional("DEBUG")]
-        private void PrintArray<T>(IReadOnlyList<T> array, string label)
+        private void PrintEventDetails(Event @event, bool? printDetails = false)
+        {
+            if (printDetails == false)
+                return;
+
+            PrintArrayContents(@event.Speakers, "Speakers");
+            PrintArrayContents(@event.Sessions, "Sessions");
+            PrintArrayContents(@event.Questions, "Questions");
+            PrintArrayContents(@event.Choices, "Choices");
+            PrintArrayContents(@event.Rooms, "Rooms");
+        }
+
+        [Conditional("DEBUG")]
+        private void PrintArrayContents<T>(IReadOnlyList<T> array, string label)
             where T : ILogFormattable
         {
             // Make sure array is not null or empty
@@ -63,22 +73,43 @@ namespace SessionizeApi.Importer.Logger
 
             try
             {
-                LoggingService.LogHeader($"{array.Count} {label}");
+                FancyLogger.LogHeader($"{array.Count} {label}");
 
                 for (var index = 0; index < array.Count; index++)
                 {
                     ILogFormattable obj = array[index];
 
-                    LoggingService.LogSubheader("{0}: {1}",
-                        index + 1, obj.LogDisplayLong);
+                    FancyLogger.LogInfo("{0}: {1}", addIndent: false,
+                        newLineAfter:true, index + 1, obj.LogDisplayLong);
 
-                    LoggingService.LogObjectAsJson<T>(obj);
+                    FancyLogger.LogObject<T>(obj);
                 }
             }
             catch (Exception exception)
             {
-                LoggingService.LogExceptionRouter(exception);
+                FancyLogger.LogException(exception);
             }
+        }
+
+        [Conditional("DEBUG")]
+        private void PrintEventSummary(Event @event)
+        {
+            FancyLogger.LogHeader($"Event Summary");
+
+            PrintArraySummary(@event.Speakers, "Speakers");
+            PrintArraySummary(@event.Sessions, "Sessions");
+            PrintArraySummary(@event.Questions, "Questions");
+            PrintArraySummary(@event.Choices, "Choices");
+            PrintArraySummary(@event.Rooms, "Rooms", newLineAfter: true);
+        }
+
+        [Conditional("DEBUG")]
+        private void PrintArraySummary<T>(IReadOnlyCollection<T> array,
+            string label, bool newLineAfter = false)
+        {
+            FancyLogger.LogInfo("{0,3} {1}", addIndent: true,
+                newLineAfter: newLineAfter,
+                array?.Count.ToString() ?? "0", label );
         }
 
         #endregion
